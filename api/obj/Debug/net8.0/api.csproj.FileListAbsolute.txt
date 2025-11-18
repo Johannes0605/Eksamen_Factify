@@ -1,0 +1,8 @@
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.csproj.AssemblyReference.cache
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.AssemblyInfoInputs.cache
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.AssemblyInfo.cs
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.csproj.CoreCompileInputs.cache
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.MvcApplicationPartsAssemblyInfo.cs
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.MvcApplicationPartsAssemblyInfo.cache
+C:\Eksamen_Factify\api\obj\Debug\net8.0\api.sourcelink.json
