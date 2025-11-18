@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { Table, Button } from 'react-bootstrap';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const ItemListPage= () => {
+  // Mock data
+  const items = [
+    {
+      ItemId: 1,
+      Name: "Fried Chicken Leg",
+      Price: 20,
+      Description: "Crispy and succulent chicken leg that is deep-fried to perfection, often served as a popular fast food item.",
+      ImageUrl: "/images/chickenleg.jpg"
+    },
+    {
+      ItemId: 2,
+      Name: "Fish and Chips",
+      Price: 180,
+      Description: "Classic British dish featuring battered and deep-fried fish served with thick-cut fried potatoes.",
+      ImageUrl: "/images/fishandchips.jpg"
+    }
+  ];
+  
+  console.log(items)
+  console.log('load items')
+  // debugger;
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h1>Items</h1>      
+      <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Descriptions</th>
+          <th>Images</th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map(item => (
+          <tr key={item.ItemId}>
+            <td>{item.ItemId}</td>
+            <td>{item.Name}</td>
+            <td>{item.Price} NOK</td>
+            <td>{item.Description}</td>
+            <td><img src={item.ImageUrl} alt={item.Name} width="120" /></td>
+          </tr>
+        ))}
+      </tbody>
+      </Table>
+    </div>
+  );
+};
 
-export default App
+export default ItemListPage;
