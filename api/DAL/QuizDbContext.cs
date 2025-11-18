@@ -1,0 +1,30 @@
+using Microsoft.EntityFrameworkCore;
+using QuizApp.Models;
+
+namespace QuizApp.DAL
+{
+    public class QuizDbContext : DbContext
+    {
+        // The DbContext is configured via DI. The options object (connection string, provider)
+        // is provided from Program.cs when the context is registered with services.
+        public QuizDbContext(DbContextOptions<QuizDbContext> options) : base(options)
+        {
+        }
+
+        // DbSets represent tables in the database and allow querying and saving instances
+        // of the corresponding entity types through EF Core.
+        public DbSet<Quiz> Quizzes { get; set; }
+
+        // Questions are related to a Quiz (one-to-many). Include navigation properties
+        // on entities to load related data when needed.
+        public DbSet<Question> Questions { get; set; }
+
+        // Options (answers) belong to a Question. Note: the class is named "Options"
+        // in the models; consider renaming to singular "Option" for clarity later.
+        public DbSet<Options> Options { get; set; }
+
+        // Users table for storing simple user records (for demo purposes). In a
+        // production app prefer ASP.NET Identity or a secure user store.
+        public DbSet<User> Users { get; set; }
+    }
+}
