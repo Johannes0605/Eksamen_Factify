@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using QuizApp.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace QuizApp.DAL
 {
