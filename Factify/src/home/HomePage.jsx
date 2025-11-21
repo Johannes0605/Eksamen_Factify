@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';   // ➜ Added for routing
 
 function HomePage() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate(); // ➜ Added: allows navigation to /quizzes
 
   useEffect(() => {
     // Fetch all quizzes from backend
@@ -24,10 +27,9 @@ function HomePage() {
       });
   }, []);
 
+  // ➜ Updated: now navigates to quiz page
   const startQuiz = (quizId) => {
-    // For now just log - you'll add routing later
-    console.log('Starting quiz:', quizId);
-    alert(`Starting quiz ${quizId}! (Add routing to navigate)`);
+    navigate('/quizzes');
   };
 
   if (loading) {
@@ -120,7 +122,7 @@ function HomePage() {
               </div>
 
               <button
-                onClick={() => startQuiz(quiz.quizId)}
+                onClick={() => startQuiz(quiz.quizId)}   // ➜ Now navigates!
                 style={{
                   width: '100%',
                   padding: '12px',
