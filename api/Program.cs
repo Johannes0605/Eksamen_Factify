@@ -1,6 +1,10 @@
 using QuizApp.DAL;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using api.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +41,55 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
 // Register repositories if needed
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 
+// Register AuthService for dependency injection
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Configure JWT Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "factify-api",
+        
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "factify-client",
+        
+        ValidateLifetime = true,
+        
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                builder.Configuration["Jwt:Key"] ?? 
+                throw new InvalidOperationException("JWT key not configured")
+            )
+        ),
+        
+        ClockSkew = TimeSpan.FromMinutes(5)
+    };
+    
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine($"Token validated for: {context.Principal?.Identity?.Name}");
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 
@@ -50,11 +103,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
-
 app.UseCors("AllowReactApp");
 
-app.UseAuthorization();
+// Add authentication & authorization middleware (ORDER MATTERS!)
+app.UseAuthentication();  // Reads and validates JWT tokens
+app.UseAuthorization();   // Checks if user has permission
 
 app.MapControllers(); // Enable API controllers
 

@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using QuizApp.DAL;
 using QuizApp.Models;
 
 namespace QuizApp.Controllers
 {
+    [Authorize]  // Require authentication for all endpoints in this controller
     [Route("api/[controller]")]
     [ApiController]
     public class QuizController : ControllerBase

@@ -26,5 +26,23 @@ namespace QuizApp.DAL
         // Users table for storing simple user records (for demo purposes). In a
         // production app prefer ASP.NET Identity or a secure user store.
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure User entity
+            modelBuilder.Entity<User>(entity =>
+            {
+                // Make email unique (no duplicate emails allowed)
+                entity.HasIndex(u => u.Email).IsUnique();
+                
+                // Make username unique
+                entity.HasIndex(u => u.Username).IsUnique();
+                
+                // Set max lengths to prevent excessively long data
+                entity.Property(u => u.Email).HasMaxLength(255).IsRequired();
+                entity.Property(u => u.Username).HasMaxLength(50).IsRequired();
+                entity.Property(u => u.PasswordHash).IsRequired();
+            });
+        }
     }
 }

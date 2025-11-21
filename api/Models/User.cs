@@ -6,16 +6,22 @@ namespace QuizApp.Models
 {
     public class User
     {
+        // Primary key for the User entity
         [Key]
+
+        // Auto-incremented user ID
         public int UserId { get; set; }
 
-        [Required, StringLength(100)]
-        public string UserName { get; set; } = string.Empty;
+        // Username of the user (display name)
+        public string Username { get; set; } = string.Empty;
 
-        [Required, StringLength(100)]
+        // Email of the user (used for login)
         public string Email { get; set; } = string.Empty;
 
-        [Required, StringLength(100)]
-        public string Password { get; set; } = string.Empty;
+        // Password hash of the user (never store plain passwords!)
+        public string PasswordHash { get; set; } = string.Empty;
+
+        // Track when the user was created
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
