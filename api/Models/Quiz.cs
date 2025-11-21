@@ -5,6 +5,7 @@ namespace QuizApp.Models
     // Represents a quiz with a title, description, and associated questions
     public class Quiz
     {
+        [Key]
         public int QuizId { get; set; }
 
         [Required, StringLength(100)]

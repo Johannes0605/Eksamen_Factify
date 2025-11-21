@@ -9,7 +9,9 @@ namespace QuizApp.DAL
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<QuizDbContext>();
 
-            // Ensure database is created
+            // Sørg for at databasen og tabellene finnes
+            db.Database.EnsureCreated();
+
             if (!db.Quizzes.Any())
             {
                 var sampleQuiz = new Quiz
@@ -18,7 +20,6 @@ namespace QuizApp.DAL
                     Description = "A sample quiz to test functionality.",
                     Questions = new List<Question>
                     {
-                        // Hard coded sample question 1 
                         new Question
                         {
                             QuestionText = "What is 2 + 2?",
@@ -32,7 +33,6 @@ namespace QuizApp.DAL
                     }
                 };
 
-                // Add more sample questions as needed
                 db.Quizzes.Add(sampleQuiz);
                 db.SaveChanges();
             }
