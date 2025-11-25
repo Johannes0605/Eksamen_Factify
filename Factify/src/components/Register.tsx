@@ -1,12 +1,11 @@
 // src/components/Register.tsx
 import React, { useState } from 'react';
-import apiService from '../services/api.service';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-interface RegisterProps {
-  onRegisterSuccess: () => void;
-}
-
-const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
+const Register: React.FC = () => {
+  const navigate = useNavigate();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -40,8 +39,8 @@ const Register: React.FC<RegisterProps> = ({ onRegisterSuccess }) => {
     setLoading(true);
 
     try {
-      await apiService.register(formData);
-      onRegisterSuccess();
+      await register(formData.username, formData.email, formData.password);
+      navigate('/home');
     } catch (err) {
       setError('Registration failed');
     } finally {

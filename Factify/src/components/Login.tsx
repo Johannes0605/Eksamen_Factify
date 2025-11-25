@@ -1,14 +1,11 @@
 // src/components/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiService from '../services/api.service';
+import { useAuth } from '../contexts/AuthContext';
 
-interface LoginProps {
-  onLoginSuccess: () => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,8 +17,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      await apiService.login({ email, password });
-      onLoginSuccess();
+      await login(email, password);
       navigate('/home');
     } catch (err) {
       setError('Wrong email or password');
