@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace QuizApp.Models
 {
-    // Represents a quiz question
     public class Question
     {
         [Key]
@@ -12,6 +12,8 @@ namespace QuizApp.Models
         public string QuestionText { get; set; } = string.Empty;
 
         public int QuizId { get; set; }
+
+        [JsonIgnore]
         public Quiz? Quiz { get; set; }
 
         public List<Options> Options { get; set; } = new();
