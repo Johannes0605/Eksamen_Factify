@@ -18,14 +18,13 @@ const App: React.FC = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/demo-quiz" element={<DemoQuiz />} />
-        <Route path="/quiz-list" element={<QuizList onSelectQuiz={() => {}} onCreateNew={() => {}} onTakeQuiz={() => {}} />} />
-        <Route path="/quiz-form/:id?" element={<QuizForm onSave={() => {}} onCancel={() => {}} />} />
-        <Route path="/take-quiz/:id" element={<TakeQuiz onComplete={() => {}} quizId={0} />} />
+        <Route path="/quiz-list" element={<QuizList />} />
+        <Route path="/quiz-form" element={<QuizForm />} />
+        <Route path="/quiz-form/:id" element={<QuizForm />} />
+        <Route path="/take-quiz/:id" element={<TakeQuiz />} />
       </Routes>
     </Layout>
   );
 };
 
 export default App;
-
-

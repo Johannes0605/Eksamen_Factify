@@ -1,0 +1,218 @@
+/* Bootstrap Custom Theme Override */
+:root {
+  /* Primary brand color */
+  --bs-primary: #0061fe;
+  --bs-primary-rgb: 0, 97, 254;
+  
+  /* Secondary colors */
+  --bs-secondary: #6b7280;
+  --bs-secondary-rgb: 107, 114, 128;
+  
+  /* Success color (green for add buttons) */
+  --bs-success: #10b981;
+  --bs-success-rgb: 16, 185, 129;
+  
+  /* Danger color (red for delete) */
+  --bs-danger: #dc3545;
+  --bs-danger-rgb: 220, 53, 69;
+  
+  /* Light backgrounds */
+  --bs-light: #f9fafb;
+  --bs-light-rgb: 249, 250, 251;
+  
+  /* Dark text */
+  --bs-dark: #1e1919;
+  --bs-dark-rgb: 30, 25, 25;
+  
+  /* Border color */
+  --bs-border-color: #e5e7eb;
+  --bs-border-color-translucent: rgba(229, 231, 235, 0.15);
+  
+  /* Body text color */
+  --bs-body-color: #1e1919;
+  --bs-body-color-rgb: 30, 25, 25;
+  
+  /* Gray scale */
+  --bs-gray-100: #f9fafb;
+  --bs-gray-200: #f3f4f6;
+  --bs-gray-300: #e5e7eb;
+  --bs-gray-400: #d1d5db;
+  --bs-gray-500: #9ca3af;
+  --bs-gray-600: #6b7280;
+  --bs-gray-700: #374151;
+  --bs-gray-800: #1f2937;
+  --bs-gray-900: #111827;
+}
+
+/* Custom form styling */
+.form-control,
+.form-select,
+.form-control:focus,
+.form-select:focus {
+  border-radius: 0.5rem;
+  border-color: #d1d5db;
+  font-size: 0.9375rem;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0061fe;
+  box-shadow: 0 0 0 0.25rem rgba(0, 97, 254, 0.15);
+}
+
+.form-label {
+  font-weight: 600;
+  color: #1e1919;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+/* Button customization */
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.625rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #0061fe;
+  border-color: #0061fe;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #0052d9;
+  border-color: #0052d9;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #0041aa;
+  border-color: #0041aa;
+}
+
+.btn-success {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.btn-outline-secondary {
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+  color: #6b7280;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Alert styling */
+.alert {
+  border-radius: 0.75rem;
+  border: none;
+  padding: 0.75rem 1rem;
+}
+
+.alert-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Card styling */
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Form check (checkboxes) */
+.form-check-input {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-color: #d1d5db;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.form-check-input:checked {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.form-check-input:focus {
+  border-color: #0061fe;
+  box-shadow: 0 0 0 0.25rem rgba(0, 97, 254, 0.15);
+}
+
+.form-check-label {
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+/* Container adjustments */
+.container {
+  max-width: 900px;
+}
+
+/* Utility classes for our design system */
+.bg-light-custom {
+  background-color: #f9fafb;
+}
+
+.bg-white-custom {
+  background-color: #ffffff;
+}
+
+.text-dark-custom {
+  color: #1e1919;
+}
+
+.text-secondary-custom {
+  color: #6b7280;
+}
+
+.border-light-custom {
+  border-color: #e5e7eb;
+}
+
+.rounded-lg {
+  border-radius: 0.75rem;
+}
+
+.rounded-xl {
+  border-radius: 1rem;
+}
+
+.shadow-sm-custom {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-md-custom {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

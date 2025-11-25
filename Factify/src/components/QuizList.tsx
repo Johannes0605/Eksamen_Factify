@@ -1,15 +1,17 @@
 // src/components/QuizList.tsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiService from '../services/api.service';
 import { Quiz } from '../types/quiz.types';
 
 interface QuizListProps {
-  onSelectQuiz: (quizId: number) => void;
-  onCreateNew: () => void;
-  onTakeQuiz: (quizId: number) => void;
+  onSelectQuiz?: (quizId: number) => void;
+  onCreateNew?: () => void;
+  onTakeQuiz?: (quizId: number) => void;
 }
 
 const QuizList: React.FC<QuizListProps> = ({ onSelectQuiz, onCreateNew, onTakeQuiz }) => {
+  const navigate = useNavigate();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -42,83 +44,150 @@ const QuizList: React.FC<QuizListProps> = ({ onSelectQuiz, onCreateNew, onTakeQu
     }
   };
 
-  const handleLogout = () => {
-    apiService.logout();
-    window.location.href = '/';
+  const handleTakeQuiz = (quizId: number) => {
+    if (onTakeQuiz) {
+      onTakeQuiz(quizId);
+    } else {
+      navigate(`/take-quiz/${quizId}`);
+    }
+  };
+
+  const handleEditQuiz = (quizId: number) => {
+    if (onSelectQuiz) {
+      onSelectQuiz(quizId);
+    } else {
+      navigate(`/quiz-form/${quizId}`);
+    }
+  };
+
+  const handleCreateNew = () => {
+    if (onCreateNew) {
+      onCreateNew();
+    } else {
+      navigate('/quiz-form');
+    }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-2xl text-gray-600">Loading...</div>
+      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', backgroundColor: '#f9fafb' }}>
+        <div style={{ fontSize: '1.5rem', color: '#6b7280' }}>Loading quizzes...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-blue-600 text-white p-4 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Factify</h1>
+    <div className="bg-white" style={{ minHeight: 'calc(100vh - 64px)', padding: '60px 24px' }}>
+      <div className="container" style={{ maxWidth: '1200px' }}>
+        
+        {/* Header */}
+        <div className="d-flex justify-content-between align-items-center mb-5">
+          <div>
+            <h1 className="display-5 fw-bold text-dark-custom mb-0">My Quizzes</h1>
+            <p className="text-secondary-custom mt-2">View, edit, and take your created quizzes</p>
+          </div>
           <button
-            onClick={handleLogout}
-            className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100"
+            onClick={handleCreateNew}
+            className="btn btn-primary"
+            style={{ fontSize: '15px', fontWeight: 600, padding: '12px 24px' }}
           >
-            Log out
-          </button>
-        </div>
-      </nav>
-
-      <div className="container mx-auto p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800">My Quizzes</h2>
-          <button
-            onClick={onCreateNew}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
-          >
-            + Create New Quiz
+            Create New Quiz
           </button>
         </div>
 
+        {/* Error Alert */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="alert alert-danger mb-4" role="alert">
             {error}
           </div>
         )}
 
+        {/* Empty State */}
         {quizzes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-600 text-lg">No quizzes yet, make a new one!</p>
+          <div className="bg-light-custom rounded-xl p-5 border border-light-custom text-center">
+            <p className="text-secondary-custom mb-0" style={{ fontSize: '1.125rem' }}>No quizzes yet</p>
+            <p className="text-secondary small mt-2">Create your first quiz to get started</p>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="row g-4">
             {quizzes.map((quiz) => (
-              <div key={quiz.quizId} className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{quiz.title}</h3>
-                <p className="text-gray-600 mb-4">{quiz.description || 'Ingen beskrivelse'}</p>
-                <p className="text-sm text-gray-500 mb-4">
-                  {quiz.questions?.length || 0} questions
-                </p>
-                
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => onTakeQuiz(quiz.quizId)}
-                    className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                  >
-                    Take Quiz
-                  </button>
-                  <button
-                    onClick={() => onSelectQuiz(quiz.quizId)}
-                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(quiz.quizId)}
-                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
+              <div key={quiz.quizId} className="col-12 col-md-6 col-lg-4">
+                <div style={{
+                  backgroundColor: '#f9fafb',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '1px solid #e5e7eb',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                  e.currentTarget.style.borderColor = '#0061fe';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = '#e5e7eb';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}>
+                  <h3 style={{ 
+                    fontSize: '1.125rem', 
+                    fontWeight: 700, 
+                    color: '#1e1919',
+                    marginBottom: '8px'
+                  }}>
+                    {quiz.title}
+                  </h3>
+                  <p style={{ 
+                    color: '#6b7280', 
+                    fontSize: '0.875rem',
+                    marginBottom: '16px',
+                    flex: 1
+                  }}>
+                    {quiz.description || 'No description provided'}
+                  </p>
+                  <div style={{ 
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    marginBottom: '16px',
+                    textAlign: 'center'
+                  }}>
+                    <span style={{ 
+                      fontSize: '0.875rem',
+                      color: '#6b7280',
+                      fontWeight: 600
+                    }}>
+                      {quiz.questions?.length || 0} Questions
+                    </span>
+                  </div>
+                  
+                  <div className="d-flex gap-2">
+                    <button
+                      onClick={() => handleTakeQuiz(quiz.quizId)}
+                      className="btn btn-primary flex-grow-1"
+                      style={{ fontSize: '13px', padding: '10px 12px' }}
+                    >
+                      Take Quiz
+                    </button>
+                    <button
+                      onClick={() => handleEditQuiz(quiz.quizId)}
+                      className="btn btn-outline-secondary flex-grow-1"
+                      style={{ fontSize: '13px', padding: '10px 12px' }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(quiz.quizId)}
+                      className="btn btn-outline-danger"
+                      style={{ fontSize: '13px', padding: '10px 12px' }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

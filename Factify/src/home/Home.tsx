@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import apiService from '../services/api.service';
+import { Quiz } from '../types/quiz.types';
 
 function Home() {
-  const [quizzes, setQuizzes] = useState([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/Quiz')
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setQuizzes(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching quizzes:', err);
-        setError('Could not load quizzes');
-        setLoading(false);
-      });
+    loadQuizzes();
   }, []);
+
+  const loadQuizzes = async () => {
+    try {
+      const data = await apiService.getAllQuizzes();
+      setQuizzes(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching quizzes:', err);
+      setError('Could not load quizzes');
+      setLoading(false);
+    }
+  };
 
   if (loading) return <p>Loading quizzes...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
