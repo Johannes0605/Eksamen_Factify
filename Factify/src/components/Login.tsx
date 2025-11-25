@@ -27,63 +27,189 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center">
-            Log In
-        </h2>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px'
+    }}>
+      <div style={{
+        backgroundColor: '#ffffff',
+        borderRadius: '24px',
+        padding: '48px',
+        width: '100%',
+        maxWidth: '480px',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ 
+            fontSize: '2.5rem', 
+            fontWeight: 800, 
+            color: '#1e1919',
+            marginBottom: '8px',
+            lineHeight: 1.2
+          }}>
+            Hello!
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            color: '#6b7280',
+            fontWeight: 400
+          }}>
+            Sign In to Get Started
+          </p>
+        </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div style={{
+            backgroundColor: '#fee2e2',
+            border: '1px solid #ef4444',
+            color: '#dc2626',
+            padding: '12px 16px',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            fontSize: '14px'
+          }}>
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-                Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email Address"
+                required
+                style={{
+                  width: '100%',
+                  padding: '18px 20px 18px 56px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '50px',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'all 0.2s',
+                  backgroundColor: '#f9fafb'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#667eea';
+                  e.target.style.backgroundColor = '#ffffff';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.backgroundColor = '#f9fafb';
+                }}
+              />
+            </div>
           </div>
 
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+          <div style={{ marginBottom: '28px' }}>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                style={{
+                  width: '100%',
+                  padding: '18px 20px 18px 56px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '50px',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'all 0.2s',
+                  backgroundColor: '#f9fafb'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#667eea';
+                  e.target.style.backgroundColor = '#ffffff';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.backgroundColor = '#f9fafb';
+                }}
+              />
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+            style={{
+              width: '100%',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: '#ffffff',
+              padding: '18px',
+              borderRadius: '50px',
+              fontSize: '16px',
+              fontWeight: 600,
+              border: 'none',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s',
+              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+              opacity: loading ? 0.7 : 1
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+            }}
           >
-            {loading ? 'Loggign in...' : 'Log In'}
+            {loading ? 'Signing in...' : 'Login'}
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <a href="/register" className="text-blue-600 hover:underline">
-            Don't have an account? Register
+        <div style={{ 
+          marginTop: '24px', 
+          textAlign: 'center',
+          fontSize: '14px',
+          color: '#6b7280'
+        }}>
+          Don't have an account?{' '}
+          <a 
+            href="/register" 
+            style={{ 
+              color: '#667eea', 
+              textDecoration: 'none', 
+              fontWeight: 600 
+            }}
+          >
+            Register
           </a>
         </div>
 
-        <div className="mt-4 text-center">
-          <a href="/" className="text-gray-600 hover:underline">
-            Back to Home
+        <div style={{ 
+          marginTop: '12px', 
+          textAlign: 'center'
+        }}>
+          <a 
+            href="/" 
+            style={{ 
+              color: '#9ca3af', 
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: 500
+            }}
+          >
+            ← Back to Home
           </a>
         </div>
       </div>
