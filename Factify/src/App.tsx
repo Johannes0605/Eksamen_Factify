@@ -14,9 +14,9 @@ const App: React.FC = () => {
     <Layout>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login onLoginSuccess={() => {}} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/register" element={<Register onRegisterSuccess={() => {}} />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/demo-quiz" element={<DemoQuiz />} />
         <Route path="/quiz-list" element={<QuizList onSelectQuiz={() => {}} onCreateNew={() => {}} onTakeQuiz={() => {}} />} />
         <Route path="/quiz-form/:id?" element={<QuizForm onSave={() => {}} onCancel={() => {}} />} />
