@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace api.Tests
 {
-    public class AccountControllerTests
+    public class AccountControllerTests : IDisposable
     {
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly Mock<ILogger<AccountController>> _mockLogger;
@@ -38,12 +38,11 @@ namespace api.Tests
         public async Task Register_WithValidData_ShouldReturnAuthResponse()
         {
             // Arrange
-            var request = new RegisterRequest
-            {
-                Username = "newuser",
-                Email = "newuser@example.com",
-                Password = "password123"
-            };
+            var request = new RegisterRequest(
+                Username: "newuser",
+                Email: "newuser@example.com",
+                Password: "password123"
+            );
             
             _mockAuthService.Setup(x => x.HashPassword(It.IsAny<string>()))
                 .Returns("hashed_password");
@@ -74,12 +73,11 @@ namespace api.Tests
             _context.Users.Add(existingUser);
             await _context.SaveChangesAsync();
 
-            var request = new RegisterRequest
-            {
-                Username = "newuser",
-                Email = "existing@example.com",
-                Password = "password123"
-            };
+            var request = new RegisterRequest(
+                Username: "newuser",
+                Email: "existing@example.com",
+                Password: "password123"
+            );
 
             // Act
             var result = await _controller.Register(request);
@@ -103,12 +101,11 @@ namespace api.Tests
             _context.Users.Add(existingUser);
             await _context.SaveChangesAsync();
 
-            var request = new RegisterRequest
-            {
-                Username = "existinguser",
-                Email = "newemail@example.com",
-                Password = "password123"
-            };
+            var request = new RegisterRequest(
+                Username: "existinguser",
+                Email: "newemail@example.com",
+                Password: "password123"
+            );
 
             // Act
             var result = await _controller.Register(request);
@@ -132,11 +129,10 @@ namespace api.Tests
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var request = new LoginRequest
-            {
-                Email = "test@example.com",
-                Password = "password123"
-            };
+            var request = new LoginRequest(
+                Email: "test@example.com",
+                Password: "password123"
+            );
 
             _mockAuthService.Setup(x => x.VerifyPassword(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(true);
@@ -157,11 +153,10 @@ namespace api.Tests
         public async Task Login_WithInvalidEmail_ShouldReturnUnauthorized()
         {
             // Arrange
-            var request = new LoginRequest
-            {
-                Email = "nonexistent@example.com",
-                Password = "password123"
-            };
+            var request = new LoginRequest(
+                Email: "nonexistent@example.com",
+                Password: "password123"
+            );
 
             // Act
             var result = await _controller.Login(request);
@@ -184,11 +179,10 @@ namespace api.Tests
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var request = new LoginRequest
-            {
-                Email = "test@example.com",
-                Password = "wrongpassword"
-            };
+            var request = new LoginRequest(
+                Email: "test@example.com",
+                Password: "wrongpassword"
+            );
 
             _mockAuthService.Setup(x => x.VerifyPassword(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(false);
