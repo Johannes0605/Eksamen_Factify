@@ -43,7 +43,7 @@ export default function NavMenu() {
           ) : (
             <>
               <Link 
-                to="/quiz-list" 
+                to="/home" 
                 className="btn btn-link text-dark text-decoration-none fw-500"
               >
                 My Quizzes
