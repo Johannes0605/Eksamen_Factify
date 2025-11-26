@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Register.css';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -49,94 +51,94 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center">
-          Register
-        </h2>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+    <div className="register-container d-flex align-items-center justify-content-center min-vh-100 p-4">
+      <div className="register-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '480px' }}>
+        <div className="card-body p-5">
+          <div className="mb-5">
+            <h1 className="h2 fw-bold text-dark mb-0">
+              Create your account
+            </h1>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+          {error && (
+            <div className="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+              {error}
+              <button type="button" className="btn-close" onClick={() => setError('')}></button>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Username"
+                required
+                className="form-control form-control-lg rounded-pill register-input"
+              />
+            </div>
+
+            <div className="mb-3">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email Address"
+                required
+                className="form-control form-control-lg rounded-pill register-input"
+              />
+            </div>
+
+            <div className="mb-3">
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                required
+                className="form-control form-control-lg rounded-pill register-input"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm Password"
+                required
+                className="form-control form-control-lg rounded-pill register-input"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-gradient btn-lg w-100 rounded-pill fw-semibold"
+            >
+              {loading ? 'Creating account...' : 'Register'}
+            </button>
+          </form>
+
+          <div className="mt-4 text-center">
+            <p className="small text-muted mb-0">
+              Already have an account?{' '}
+              <a href="/login" className="text-decoration-none fw-semibold gradient-text">
+                Log in
+              </a>
+            </p>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+          <div className="mt-3 text-center">
+            <a href="/" className="text-secondary text-decoration-none small">
+              ← Back to Home
+            </a>
           </div>
-
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-                Confirm Password
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400"
-          >
-            {loading ? 'Registreing...' : 'Registrering'}
-          </button>
-        </form>
-
-        <div className="mt-4 text-center">
-          <a href="/login" className="text-blue-600 hover:underline">
-            Already have an account? Log in
-          </a>
-        </div>
-
-        <div className="mt-4 text-center">
-          <a href="/" className="text-gray-600 hover:underline">
-            Back to Home
-          </a>
         </div>
       </div>
     </div>

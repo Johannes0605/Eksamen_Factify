@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Login.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -27,190 +29,68 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px'
-    }}>
-      <div style={{
-        backgroundColor: '#ffffff',
-        borderRadius: '24px',
-        padding: '48px',
-        width: '100%',
-        maxWidth: '480px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
-      }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ 
-            fontSize: '2.5rem', 
-            fontWeight: 800, 
-            color: '#1e1919',
-            marginBottom: '8px',
-            lineHeight: 1.2
-          }}>
-            Hello!
-          </h1>
-          <p style={{ 
-            fontSize: '1.25rem', 
-            color: '#6b7280',
-            fontWeight: 400
-          }}>
-            Sign In to Get Started
-          </p>
-        </div>
-
-        {error && (
-          <div style={{
-            backgroundColor: '#fee2e2',
-            border: '1px solid #ef4444',
-            color: '#dc2626',
-            padding: '12px 16px',
-            borderRadius: '12px',
-            marginBottom: '24px',
-            fontSize: '14px'
-          }}>
-            {error}
+    <div className="login-container d-flex align-items-center justify-content-center min-vh-100 p-4">
+      <div className="login-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '480px' }}>
+        <div className="card-body p-5">
+          <div className="mb-5">
+            <h1 className="h2 fw-bold text-dark mb-0">
+              Sign in to get started
+            </h1>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center'
-            }}>
+          {error && (
+            <div className="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+              {error}
+              <button type="button" className="btn-close" onClick={() => setError('')}></button>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email Address"
                 required
-                style={{
-                  width: '100%',
-                  padding: '18px 20px 18px 56px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '50px',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'all 0.2s',
-                  backgroundColor: '#f9fafb'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#667eea';
-                  e.target.style.backgroundColor = '#ffffff';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#e5e7eb';
-                  e.target.style.backgroundColor = '#f9fafb';
-                }}
+                className="form-control form-control-lg rounded-pill login-input"
               />
             </div>
-          </div>
 
-          <div style={{ marginBottom: '28px' }}>
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center'
-            }}>
+            <div className="mb-4">
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
-                style={{
-                  width: '100%',
-                  padding: '18px 20px 18px 56px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '50px',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'all 0.2s',
-                  backgroundColor: '#f9fafb'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#667eea';
-                  e.target.style.backgroundColor = '#ffffff';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#e5e7eb';
-                  e.target.style.backgroundColor = '#f9fafb';
-                }}
+                className="form-control form-control-lg rounded-pill login-input"
               />
             </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-gradient btn-lg w-100 rounded-pill fw-semibold"
+            >
+              {loading ? 'Signing in...' : 'Login'}
+            </button>
+          </form>
+
+          <div className="mt-4 text-center">
+            <p className="small text-muted mb-0">
+              Don't have an account?{' '}
+              <a href="/register" className="text-decoration-none fw-semibold gradient-text">
+                Register
+              </a>
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: '#ffffff',
-              padding: '18px',
-              borderRadius: '50px',
-              fontSize: '16px',
-              fontWeight: 600,
-              border: 'none',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s',
-              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-              opacity: loading ? 0.7 : 1
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
-            }}
-          >
-            {loading ? 'Signing in...' : 'Login'}
-          </button>
-        </form>
-
-        <div style={{ 
-          marginTop: '24px', 
-          textAlign: 'center',
-          fontSize: '14px',
-          color: '#6b7280'
-        }}>
-          Don't have an account?{' '}
-          <a 
-            href="/register" 
-            style={{ 
-              color: '#667eea', 
-              textDecoration: 'none', 
-              fontWeight: 600 
-            }}
-          >
-            Register
-          </a>
-        </div>
-
-        <div style={{ 
-          marginTop: '12px', 
-          textAlign: 'center'
-        }}>
-          <a 
-            href="/" 
-            style={{ 
-              color: '#9ca3af', 
-              textDecoration: 'none',
-              fontSize: '14px',
-              fontWeight: 500
-            }}
-          >
-            ← Back to Home
-          </a>
+          <div className="mt-3 text-center">
+            <a href="/" className="text-secondary text-decoration-none small">
+              ← Back to Home
+            </a>
+          </div>
         </div>
       </div>
     </div>
