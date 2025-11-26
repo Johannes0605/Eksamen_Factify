@@ -33,29 +33,31 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
     }
     try {
       const data = await apiService.getQuizById(quizId);
+      console.log('Raw quiz data from API:', data);
 
       // Normalize backend shape to frontend expected shape:
-      // backend may return question.options with optionsId/text, while frontend expects question.answerOptions with answerOptionId/answerText
       const normalized = {
         ...data,
-        questions: (data.questions || []).map((q: any) => ({
-          questionId: q.questionId ?? q.questionId ?? 0,
-          questionText: q.questionText ?? q.questionText ?? q.text ?? '',
-          points: q.points ?? 1,
-          answerOptions: (q.answerOptions && q.answerOptions.length) ? q.answerOptions.map((ao: any) => ({
-            answerOptionId: ao.answerOptionId ?? ao.optionsId ?? ao.id,
-            answerText: ao.answerText ?? ao.text ?? '',
-            isCorrect: ao.isCorrect ?? ao.correct ?? false
-          })) : (q.options || []).map((opt: any) => ({
-            answerOptionId: opt.optionsId ?? opt.answerOptionId ?? opt.id,
-            answerText: opt.text ?? opt.answerText ?? '',
-            isCorrect: opt.isCorrect ?? opt.correct ?? false
-          }))
-        }))
+        questions: (data.questions || []).map((q: any) => {
+          const normalizedQuestion = {
+            questionId: q.questionId ?? 0,
+            questionText: q.questionText ?? '',
+            points: q.points ?? 1,
+            answerOptions: (q.answerOptions || q.options || []).map((opt: any) => ({
+              answerOptionId: opt.answerOptionId ?? opt.optionsId ?? 0,
+              answerText: opt.answerText ?? opt.text ?? '',
+              isCorrect: opt.isCorrect ?? false
+            }))
+          };
+          console.log('Normalized question:', normalizedQuestion);
+          return normalizedQuestion;
+        })
       } as Quiz;
 
+      console.log('Final normalized quiz:', normalized);
       setQuiz(normalized);
     } catch (err) {
+      console.error('Error loading quiz:', err);
       alert('Could not load quiz');
     } finally {
       setLoading(false);

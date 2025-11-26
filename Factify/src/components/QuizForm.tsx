@@ -136,9 +136,8 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
         {/* Error Alert */}
         {error && (
-          <div className="alert alert-danger d-flex align-items-center mb-4" role="alert">
-            <span className="me-2">⚠️</span>
-            <div>{error}</div>
+          <div className="alert alert-danger mb-4" role="alert">
+            {error}
           </div>
         )}
 
@@ -188,8 +187,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
               {quiz.questions?.length === 0 ? (
                 <div className="bg-white rounded p-5 text-center border border-2 border-dashed border-light-custom">
-                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>❓</div>
-                  <p className="text-secondary-custom fw-semibold mb-1">No questions yet</p>
+                  <p className="text-secondary-custom fw-semibold mb-1" style={{ fontSize: '1.125rem' }}>No questions yet</p>
                   <p className="text-secondary small">Click the button above to create your first question</p>
                 </div>
               ) : (
@@ -286,7 +284,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                                 htmlFor={`correct-${qIndex}-${oIndex}`}
                                 style={{ color: option.isCorrect ? 'var(--bs-success)' : 'var(--bs-secondary)', cursor: 'pointer' }}
                               >
-                                ✓ Correct
+                                Correct
                               </label>
                             </div>
 
@@ -295,7 +293,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                               onClick={() => removeAnswerOption(qIndex, oIndex)}
                               className="btn btn-outline-danger btn-sm"
                             >
-                              ✕
+                              Remove
                             </button>
                           </div>
                         ))}
@@ -314,7 +312,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                   disabled={loading}
                   className="btn btn-primary w-100"
                 >
-                  {loading ? '⏳ Saving...' : '💾 Save Quiz'}
+                  {loading ? 'Saving...' : 'Save Quiz'}
                 </button>
               </div>
               <div className="col-6">
