@@ -17,6 +17,9 @@ namespace QuizApp.Models
         // Foreign key to User who created this quiz
         public int UserId { get; set; }
 
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime LastUsedDate { get; set; } = DateTime.UtcNow;
+
         public List<Question> Questions { get; set; } = new();
     }
 }

@@ -1,6 +1,7 @@
 // src/components/TakeQuiz.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import apiService from '../services/api.service';
 import { Quiz, Question } from '../types/quiz.types';
 
@@ -12,6 +13,7 @@ interface TakeQuizProps {
 const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) => {
   const { id: paramId } = useParams<{ id?: string }>();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const quizId = propQuizId || (paramId ? parseInt(paramId) : 0);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -102,10 +104,13 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
     setScore(calculatedScore);
     setShowResults(true);
 
-    try {
-      await apiService.submitQuizAttempt(quizId, { answers });
-    } catch (err) {
-      console.error('Could not save quiz attempt');
+    // Only submit if authenticated
+    if (isAuthenticated) {
+      try {
+        await apiService.submitQuizAttempt(quizId, { answers });
+      } catch (err) {
+        console.error('Could not save quiz attempt');
+      }
     }
   };
 
@@ -165,13 +170,34 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
             )}
           </div>
 
-          <button
-            onClick={handleBackHome}
-            className="btn btn-primary"
-            style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
-          >
-            Back to Home
-          </button>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {isAuthenticated ? (
+              <button
+                onClick={handleBackHome}
+                className="btn btn-primary"
+                style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
+              >
+                Back to Home
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate('/register')}
+                  className="btn btn-primary"
+                  style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
+                >
+                  Create Account
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="btn btn-outline-primary"
+                  style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
+                >
+                  Login
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );

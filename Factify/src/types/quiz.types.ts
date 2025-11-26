@@ -6,6 +6,7 @@ export interface Quiz {
   description?: string;
   createdBy?: string;
   createdDate?: Date;
+  lastUsedDate?: Date;
   questions: Question[];
 }
 

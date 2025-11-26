@@ -29,11 +29,15 @@ namespace QuizApp.Controllers
             }
 
             var allQuizzes = await _quizRepository.GetAllQuizzesAsync();
-            var userQuizzes = allQuizzes.Where(q => q.UserId == userId).ToList();
+            var userQuizzes = allQuizzes
+                .Where(q => q.UserId == userId)
+                .OrderByDescending(q => q.CreatedDate)
+                .ToList();
             return Ok(userQuizzes);
         }
 
         // GET: api/quiz/5
+        [AllowAnonymous]  // Allow anyone to view a quiz via link
         [HttpGet("{id}")]
         public async Task<ActionResult<Quiz>> GetQuizById(int id)
         {
@@ -123,9 +127,11 @@ namespace QuizApp.Controllers
             // Create a copy of the quiz
             var duplicatedQuiz = new Quiz
             {
-                Title = $"{originalQuiz.Title} (Copy)",
+                Title = originalQuiz.Title + " Copy",
                 Description = originalQuiz.Description,
                 UserId = userId,
+                CreatedDate = DateTime.UtcNow,
+                LastUsedDate = DateTime.UtcNow,
                 Questions = originalQuiz.Questions.Select(q => new Question
                 {
                     QuestionText = q.QuestionText,

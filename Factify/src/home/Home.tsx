@@ -11,6 +11,7 @@ function Home() {
   const [error, setError] = useState('');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<'created' | 'used'>('created');
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -38,6 +39,15 @@ function Home() {
       console.error('Error fetching quizzes:', err);
       setError('Could not load quizzes');
       setLoading(false);
+    }
+  };
+
+  const getSortedQuizzes = () => {
+    const sorted = [...quizzes];
+    if (sortBy === 'created') {
+      return sorted.sort((a, b) => new Date(b.createdDate || 0).getTime() - new Date(a.createdDate || 0).getTime());
+    } else {
+      return sorted.sort((a, b) => new Date(b.lastUsedDate || 0).getTime() - new Date(a.lastUsedDate || 0).getTime());
     }
   };
 
@@ -107,6 +117,32 @@ function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start' }}>
           {/* Left Side - User Quizzes */}
           <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div></div>
+              {quizzes.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '13px', color: '#e5e7eb', fontWeight: 500 }}>Sort:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'created' | 'used')}
+                    style={{
+                      padding: '6px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#ffffff',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      outline: 'none'
+                    }}
+                  >
+                    <option value="created" style={{ backgroundColor: '#1e40af', color: '#ffffff' }}>Date Created</option>
+                    <option value="used" style={{ backgroundColor: '#1e40af', color: '#ffffff' }}>Recently Used</option>
+                  </select>
+                </div>
+              )}
+            </div>
 
           {quizzes.length === 0 ? (
             <div style={{
@@ -143,30 +179,19 @@ function Home() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {quizzes.map((quiz: any) => (
+              {getSortedQuizzes().map((quiz: any) => (
                 <div 
                   key={quiz.quizId} 
                   onClick={() => setSelectedQuiz(quiz)}
                   style={{
-                    backgroundColor: selectedQuiz?.quizId === quiz.quizId ? '#ffffff' : '#f9fafb',
+                    backgroundColor: selectedQuiz?.quizId === quiz.quizId ? '#dbeafe' : '#f9fafb',
                     borderRadius: '12px',
                     padding: '20px',
-                    border: selectedQuiz?.quizId === quiz.quizId ? '2px solid #0061fe' : '1px solid #e5e7eb',
-                    transition: 'all 0.2s',
+                    borderLeft: selectedQuiz?.quizId === quiz.quizId ? '5px solid #60a5fa' : '5px solid transparent',
+                    border: selectedQuiz?.quizId === quiz.quizId ? '2px solid #60a5fa' : '1px solid #e5e7eb',
+                    boxShadow: selectedQuiz?.quizId === quiz.quizId ? '0 4px 20px rgba(96, 165, 250, 0.4)' : 'none',
                     cursor: 'pointer',
                     position: 'relative'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedQuiz?.quizId !== quiz.quizId) {
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-                      e.currentTarget.style.borderColor = '#0061fe';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedQuiz?.quizId !== quiz.quizId) {
-                      e.currentTarget.style.boxShadow = 'none';
-                      e.currentTarget.style.borderColor = '#e5e7eb';
-                    }
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
@@ -182,33 +207,10 @@ function Home() {
                       <p style={{ 
                         color: '#6b7280', 
                         fontSize: '0.875rem',
-                        marginBottom: '16px'
+                        marginBottom: 0
                       }}>
                         {quiz.description}
                       </p>
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleTakeQuiz(quiz.quizId);
-                          }}
-                          style={{
-                            backgroundColor: '#0061fe',
-                            color: '#ffffff',
-                            padding: '10px 20px',
-                            borderRadius: '6px',
-                            fontSize: '14px',
-                            fontWeight: 600,
-                            border: 'none',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.2s'
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0052d9'}
-                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0061fe'}
-                        >
-                          Take Quiz →
-                        </button>
-                      </div>
                     </div>
 
                     {/* Three-dot menu */}

@@ -69,8 +69,11 @@ class ApiService {
 
   async getQuizById(id: number): Promise<Quiz> {
     const token = localStorage.getItem('token');
-    const url = token ? `${API_BASE_URL}/quiz/${id}` : `${API_BASE_URL}/quiz/public/${id}`;
-    const response = await fetch(url, token ? { headers: this.getAuthHeader() } : undefined);
+    const headers = token ? this.getAuthHeader() : { 'Content-Type': 'application/json' };
+    
+    const response = await fetch(`${API_BASE_URL}/quiz/${id}`, {
+      headers
+    });
 
     if (!response.ok) throw new Error('Failed to fetch quiz');
     return response.json();
