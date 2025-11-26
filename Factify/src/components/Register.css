@@ -15,7 +15,7 @@
 .register-input {
   padding: 1.125rem 1.25rem !important;
   border: 2px solid #e5e7eb !important;
-  background-color: #f9fafb !important;
+  background-color: #ffffff !important;
   border-radius: 50px !important;
   font-size: 0.9375rem;
   transition: all 0.2s ease;
@@ -25,6 +25,14 @@
   border-color: #667eea !important;
   background-color: #ffffff !important;
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.1) !important;
+}
+
+.register-input:-webkit-autofill,
+.register-input:-webkit-autofill:hover,
+.register-input:-webkit-autofill:focus,
+.register-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 .min-vh-100 {
