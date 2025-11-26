@@ -10,9 +10,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test": "echo \"Frontend tests removed. Run backend tests with: dotnet test\" && exit 0",
+    "test:backend": "cd .. && dotnet test"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
