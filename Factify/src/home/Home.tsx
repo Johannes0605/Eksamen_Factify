@@ -85,27 +85,28 @@ function Home() {
 
   return (
     <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '80px 24px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start' }}>
-        
-        {/* Left Side - User Quizzes */}
-        <div>
-          <div style={{ marginBottom: '32px' }}>
-            <h1 style={{ 
-              fontSize: '2.5rem', 
-              fontWeight: 800, 
-              marginBottom: '8px',
-              color: '#ffffff'
-            }}>
-              Welcome back, <span style={{ color: '#60a5fa' }}>{user?.username}</span>!
-            </h1>
-            <p style={{ 
-              fontSize: '1.125rem', 
-              color: '#ffffff', 
-              marginBottom: '24px'
-            }}>
-              Here are all the available quizzes
-            </p>
-          </div>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ 
+            fontSize: '2.5rem', 
+            fontWeight: 800, 
+            marginBottom: '8px',
+            color: '#ffffff'
+          }}>
+            Welcome back, <span style={{ color: '#60a5fa' }}>{user?.username}</span>!
+          </h1>
+          <p style={{ 
+            fontSize: '1.125rem', 
+            color: '#ffffff', 
+            marginBottom: '24px'
+          }}>
+            Here are all the available quizzes
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start' }}>
+          {/* Left Side - User Quizzes */}
+          <div>
 
           {quizzes.length === 0 ? (
             <div style={{
@@ -498,6 +499,7 @@ function Home() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
