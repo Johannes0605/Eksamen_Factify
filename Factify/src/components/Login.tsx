@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container d-flex align-items-start justify-content-center min-vh-100" style={{ paddingTop: '80px' }}>
+    <div className="login-container d-flex align-items-start justify-content-center min-vh-100" style={{ paddingTop: '80px', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)' }}>
       <div className="login-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '480px' }}>
         <div className="card-body p-5">
           <div className="mb-5">

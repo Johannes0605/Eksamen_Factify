@@ -74,7 +74,7 @@ const LandingPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', padding: '80px 24px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '80px 24px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
         
         {/* Left Side - Text Content */}
@@ -84,27 +84,28 @@ const LandingPage: React.FC = () => {
             fontWeight: 800, 
             lineHeight: 1.2,
             marginBottom: '24px',
-            color: '#1e1919'
+            color: '#ffffffff'
           }}>
-            Create & Share
+            Create and share
             <br />
-            <span style={{ color: '#0061fe' }}>Engaging Quizzes</span>
+            <span style={{ color: '#28cdffff' }}>your own quizzes</span>
           </h1>
 
-          <p className="fs-5 text-muted mb-4 lh-lg" style={{ maxWidth: '500px' }}>
+          <p className="fs-5 mb-4 lh-lg" style={{ maxWidth: '500px', color: '#ffffff' }}>
             Create interactive quizzes with Factify, test knowledge, 
             and track your progress. Build quizzes in minutes and share them with your team or students.
           </p>
 
           <button
             onClick={() => navigate('/register')}
-            className="btn btn-primary btn-lg mb-3"
+            className="btn btn-lg mb-3"
+            style={{ backgroundColor: '#ffffff', color: '#1e40af', border: 'none', fontWeight: 600 }}
           >
             Get Started →
           </button>
 
-          <p className="small text-secondary">
-            Already have an account? <a href="/login" className="text-primary fw-bold text-decoration-none">Sign in</a>
+          <p className="small" style={{ color: '#ffffff' }}>
+            Already have an account? <a href="/login" className="fw-bold text-decoration-none" style={{ color: '#28cdffff' }}>Sign in</a>
           </p>
         </div>
 
@@ -114,10 +115,6 @@ const LandingPage: React.FC = () => {
               <div className="card-body p-5">
                 <div className="mb-4">
                   <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex align-items-center gap-2">
-                      <span className="badge bg-success">●</span>
-                      <span className="small fw-bold text-muted">LIVE DEMO</span>
-                    </div>
                     <span className="small fw-bold text-muted">
                       {showResult ? 'COMPLETED' : `${currentQuestion + 1}/${sampleQuiz.questions.length}`}
                     </span>

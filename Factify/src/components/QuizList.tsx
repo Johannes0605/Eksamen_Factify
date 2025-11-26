@@ -70,14 +70,14 @@ const QuizList: React.FC<QuizListProps> = ({ onSelectQuiz, onCreateNew, onTakeQu
 
   if (loading) {
     return (
-      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)' }}>
+      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)' }}>
         <div style={{ fontSize: '1.5rem', color: '#6b7280' }}>Loading quizzes...</div>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', padding: '60px 24px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '60px 24px' }}>
       <div className="container" style={{ maxWidth: '1200px' }}>
         
         {/* Header */}

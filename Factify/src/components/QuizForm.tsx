@@ -117,7 +117,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
   };
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', paddingTop: '60px', paddingBottom: '60px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', paddingTop: '60px', paddingBottom: '60px' }}>
       <div className="container">
         
         {/* Header Section */}
