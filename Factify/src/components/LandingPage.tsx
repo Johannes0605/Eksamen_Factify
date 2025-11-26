@@ -2,6 +2,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./LandingPage.css";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -72,271 +74,136 @@ const LandingPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', backgroundColor: '#ffffff', padding: '80px 24px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
-        
-        {/* Left Side - Text Content */}
-        <div>
+    <div className="landing-page-container min-vh-100 bg-white py-5">
+      <div className="container-lg">
+        <div className="row g-5 align-items-center">
+          
+          {/* Left Side - Text Content */}
+          <div className="col-lg-6">
+            <h1 className="display-3 fw-bold mb-4 landing-title">
+              Create & Share
+              <br />
+              <span className="text-primary">Your own Quizzes</span>
+            </h1>
 
-          <h1 style={{ 
-            fontSize: '3.5rem', 
-            fontWeight: 800, 
-            lineHeight: 1.2,
-            marginBottom: '24px',
-            color: '#1e1919'
-          }}>
-            Create & Share
-            <br />
-            <span style={{ color: '#0061fe' }}>Engaging Quizzes</span>
-          </h1>
+            <p className="fs-5 text-muted mb-4 lh-lg" style={{ maxWidth: '500px' }}>
+              Create interactive quizzes with Factify, test knowledge, 
+              and track your progress. Build quizzes in minutes and share them with your team or students.
+            </p>
 
-          <p style={{ 
-            fontSize: '1.125rem', 
-            color: '#6b7280', 
-            lineHeight: 1.7,
-            marginBottom: '32px',
-            maxWidth: '500px'
-          }}>
-            Factify empowers you to create interactive quizzes, test knowledge, 
-            and track progress. Build quizzes in minutes and share them with your team or students.
-          </p>
+            <button
+              onClick={() => navigate('/register')}
+              className="btn btn-primary btn-lg mb-3"
+            >
+              Get Started →
+            </button>
 
-          <button
-            onClick={() => navigate('/register')}
-            style={{
-              backgroundColor: '#0061fe',
-              color: '#ffffff',
-              padding: '14px 32px',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: 600,
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-              boxShadow: '0 4px 6px rgba(0, 97, 254, 0.2)'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0052d9'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0061fe'}
-          >
-            Get Started Free →
-          </button>
-
-          <p style={{ 
-            fontSize: '0.875rem', 
-            color: '#9ca3af', 
-            marginTop: '16px'
-          }}>
-            Already have an account? <a href="/login" style={{ color: '#0061fe', textDecoration: 'none', fontWeight: 600 }}>Sign in</a>
-          </p>
-        </div>
-
-        {/* Right Side - Interactive Demo Quiz */}
-        <div style={{
-          backgroundColor: '#f9fafb',
-          borderRadius: '16px',
-          padding: '32px',
-          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
-        }}>
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between',
-              marginBottom: '12px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  backgroundColor: '#10b981'
-                }}></div>
-                <span style={{ fontSize: '14px', color: '#6b7280', fontWeight: 600 }}>LIVE DEMO</span>
-              </div>
-              <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600 }}>
-                {showResult ? 'COMPLETED' : `${currentQuestion + 1}/${sampleQuiz.questions.length}`}
-              </span>
-            </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e1919', marginBottom: '8px' }}>
-              {sampleQuiz.title}
-            </h3>
-            <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-              Try this interactive sample quiz
+            <p className="small text-secondary">
+              Already have an account? <a href="/login" className="text-primary fw-bold text-decoration-none">Sign in</a>
             </p>
           </div>
 
-          {!showResult ? (
-            <div style={{ 
-              backgroundColor: '#ffffff',
-              borderRadius: '12px',
-              padding: '24px',
-              marginBottom: '20px',
-              border: '1px solid #e5e7eb'
-            }}>
-              <p style={{ 
-                fontSize: '1rem', 
-                fontWeight: 600, 
-                color: '#1e1919',
-                marginBottom: '20px',
-                lineHeight: 1.5
-              }}>
-                {sampleQuiz.questions[currentQuestion].text}
-              </p>
+          {/* Right Side - Interactive Demo Quiz */}
+          <div className="col-lg-6">
+            <div className="card shadow-lg border-light rounded-4 quiz-card">
+              <div className="card-body p-5">
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="badge bg-success">●</span>
+                      <span className="small fw-bold text-muted">LIVE DEMO</span>
+                    </div>
+                    <span className="small fw-bold text-muted">
+                      {showResult ? 'COMPLETED' : `${currentQuestion + 1}/${sampleQuiz.questions.length}`}
+                    </span>
+                  </div>
+                  <h3 className="card-title h4 fw-bold mb-2">
+                    {sampleQuiz.title}
+                  </h3>
+                  <p className="card-text small text-muted">
+                    Try this interactive sample quiz
+                  </p>
+                </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {sampleQuiz.questions[currentQuestion].options.map((option, index) => {
-                  const isCorrect = index === sampleQuiz.questions[currentQuestion].correctAnswer;
-                  const isSelected = selectedAnswer === index;
-                  const showFeedback = answered;
-                  
-                  let backgroundColor = '#ffffff';
-                  let borderColor = '#e5e7eb';
-                  let textColor = '#1e1919';
-                  
-                  if (showFeedback) {
-                    if (isSelected) {
-                      if (isCorrect) {
-                        backgroundColor = '#dcfce7';
-                        borderColor = '#22c55e';
-                        textColor = '#16a34a';
-                      } else {
-                        backgroundColor = '#fee2e2';
-                        borderColor = '#ef4444';
-                        textColor = '#dc2626';
-                      }
-                    } else if (isCorrect) {
-                      backgroundColor = '#dcfce7';
-                      borderColor = '#22c55e';
-                      textColor = '#16a34a';
-                    }
-                  } else if (isSelected) {
-                    backgroundColor = '#f0f7ff';
-                    borderColor = '#0061fe';
-                    textColor = '#0061fe';
-                  }
+                {!showResult ? (
+                  <>
+                    <div className="bg-light rounded-3 p-4 mb-4">
+                      <p className="fw-semibold mb-4 lh-base">
+                        {sampleQuiz.questions[currentQuestion].text}
+                      </p>
 
-                  return (
+                      <div className="d-flex flex-column gap-3">
+                        {sampleQuiz.questions[currentQuestion].options.map((option, index) => {
+                          const isCorrect = index === sampleQuiz.questions[currentQuestion].correctAnswer;
+                          const isSelected = selectedAnswer === index;
+                          const showFeedback = answered;
+                          
+                          let buttonClass = 'btn btn-outline-secondary w-100 text-start d-flex justify-content-between align-items-center';
+                          
+                          if (showFeedback) {
+                            if (isSelected) {
+                              buttonClass = isCorrect 
+                                ? 'btn btn-outline-success w-100 text-start d-flex justify-content-between align-items-center border-2'
+                                : 'btn btn-outline-danger w-100 text-start d-flex justify-content-between align-items-center border-2';
+                            } else if (isCorrect) {
+                              buttonClass = 'btn btn-outline-success w-100 text-start d-flex justify-content-between align-items-center';
+                            }
+                          } else if (isSelected) {
+                            buttonClass = 'btn btn-outline-primary w-100 text-start d-flex justify-content-between align-items-center border-2';
+                          }
+
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handleAnswerSelect(index)}
+                              disabled={answered}
+                              className={buttonClass}
+                            >
+                              <span>{option}</span>
+                              <span>
+                                {showFeedback && isCorrect && '✓'}
+                                {showFeedback && isSelected && !isCorrect && '✗'}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
                     <button
-                      key={index}
-                      onClick={() => handleAnswerSelect(index)}
-                      disabled={answered}
-                      style={{
-                        padding: '14px 16px',
-                        borderRadius: '8px',
-                        border: `2px solid ${borderColor}`,
-                        backgroundColor: backgroundColor,
-                        color: textColor,
-                        fontSize: '14px',
-                        fontWeight: isSelected || (showFeedback && isCorrect) ? 600 : 500,
-                        cursor: answered ? 'default' : 'pointer',
-                        transition: 'all 0.2s',
-                        textAlign: 'left',
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!answered && !isSelected) {
-                          e.currentTarget.style.borderColor = '#0061fe';
-                          e.currentTarget.style.backgroundColor = '#f9fafb';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!answered && !isSelected) {
-                          e.currentTarget.style.borderColor = '#e5e7eb';
-                          e.currentTarget.style.backgroundColor = '#ffffff';
-                        }
-                      }}
+                      onClick={handleNext}
+                      disabled={!answered}
+                      className="btn btn-primary w-100"
                     >
-                      <span>{option}</span>
-                      {showFeedback && isCorrect && <span>✓</span>}
-                      {showFeedback && isSelected && !isCorrect && <span>✗</span>}
+                      {currentQuestion < sampleQuiz.questions.length - 1 ? 'Next Question →' : 'Finish Quiz'}
                     </button>
-                  );
-                })}
+                  </>
+                ) : (
+                  <div className="bg-light rounded-3 p-5 text-center">
+                    <h4 className="fw-bold mb-3">
+                      Quiz Completed!
+                    </h4>
+                    <p className="display-5 fw-bold text-primary mb-3">
+                      {score} / {sampleQuiz.questions.length}
+                    </p>
+                    <p className="small text-muted mb-4">
+                      {score === sampleQuiz.questions.length 
+                        ? 'Perfect score!' 
+                        : score >= sampleQuiz.questions.length / 2 
+                          ? 'Great job!' 
+                          : 'Keep practicing!'}
+                    </p>
+                    <button
+                      onClick={resetQuiz}
+                      className="btn btn-outline-primary"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          ) : (
-            <div style={{ 
-              backgroundColor: '#ffffff',
-              borderRadius: '12px',
-              padding: '32px',
-              marginBottom: '20px',
-              border: '1px solid #e5e7eb',
-              textAlign: 'center'
-            }}>
-              <h4 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e1919', marginBottom: '8px' }}>
-                Quiz Completed!
-              </h4>
-              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#0061fe', marginBottom: '12px' }}>
-                {score} / {sampleQuiz.questions.length}
-              </p>
-              <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '20px' }}>
-                {score === sampleQuiz.questions.length 
-                  ? 'Perfect score!' 
-                  : score >= sampleQuiz.questions.length / 2 
-                    ? 'Great job!' 
-                    : 'Keep practicing!'}
-              </p>
-              <button
-                onClick={resetQuiz}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  border: '2px solid #0061fe',
-                  backgroundColor: '#ffffff',
-                  color: '#0061fe',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#0061fe';
-                  e.currentTarget.style.color = '#ffffff';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#ffffff';
-                  e.currentTarget.style.color = '#0061fe';
-                }}
-              >
-                Try Again
-              </button>
-            </div>
-          )}
-
-          {!showResult && (
-            <button
-              onClick={handleNext}
-              disabled={!answered}
-              style={{
-                width: '100%',
-                backgroundColor: answered ? '#0061fe' : '#e5e7eb',
-                color: answered ? '#ffffff' : '#9ca3af',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                fontSize: '15px',
-                fontWeight: 600,
-                border: 'none',
-                cursor: answered ? 'pointer' : 'not-allowed',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                if (answered) {
-                  e.currentTarget.style.backgroundColor = '#0052d9';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (answered) {
-                  e.currentTarget.style.backgroundColor = '#0061fe';
-                }
-              }}
-            >
-              {currentQuestion < sampleQuiz.questions.length - 1 ? 'Next Question →' : 'Finish Quiz'}
-            </button>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,79 @@
+/* LandingPage Custom Styles */
+
+.landing-page-container {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.landing-title {
+  line-height: 1.2;
+  color: #1e1919;
+}
+
+.quiz-card {
+  border-radius: 1rem !important;
+  border: 1px solid #e5e7eb !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quiz-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 97, 254, 0.15) !important;
+}
+
+.quiz-card .btn-outline-secondary {
+  border-width: 2px;
+  transition: all 0.2s ease;
+}
+
+.quiz-card .btn-outline-secondary:hover:not(:disabled) {
+  border-color: #0061fe;
+  background-color: #f9fafb;
+  color: #1e1919;
+}
+
+.quiz-card .btn-outline-secondary:disabled {
+  cursor: not-allowed;
+}
+
+.quiz-card .btn-outline-success {
+  background-color: #dcfce7 !important;
+  color: #16a34a !important;
+}
+
+.quiz-card .btn-outline-danger {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+.quiz-card .btn-outline-primary {
+  color: #0061fe !important;
+}
+
+.quiz-card .btn-outline-primary:hover:not(:disabled) {
+  background-color: #0061fe !important;
+  color: white !important;
+  border-color: #0061fe !important;
+}
+
+@media (max-width: 991px) {
+  .landing-page-container {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .landing-title {
+    font-size: 2.5rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .landing-page-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .landing-title {
+    font-size: 1.75rem !important;
+  }
+}
