@@ -119,7 +119,7 @@ const Register: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-gradient btn-lg w-100 rounded-pill fw-semibold"
+              className="btn btn-primary btn-lg w-100 rounded-pill"
             >
               {loading ? 'Creating account...' : 'Register'}
             </button>

@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container d-flex align-items-center justify-content-center min-vh-100 p-4">
+    <div className="login-container d-flex align-items-start justify-content-center min-vh-100" style={{ paddingTop: '80px' }}>
       <div className="login-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '480px' }}>
         <div className="card-body p-5">
           <div className="mb-5">
@@ -68,13 +68,15 @@ const Login: React.FC = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-gradient btn-lg w-100 rounded-pill fw-semibold"
-            >
-              {loading ? 'Signing in...' : 'Login'}
-            </button>
+            <div className="text-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary btn-lg mb-3 w-100 rounded-pill"
+              >
+                {loading ? 'Signing in...' : 'Login'}
+              </button>
+            </div>
           </form>
 
           <div className="mt-4 text-center">

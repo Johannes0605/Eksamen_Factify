@@ -1,11 +1,5 @@
 /* Login Custom Styles */
 
-.login-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding-top: 5px !important;
-}
-
 .login-card {
   background-color: #ffffff;
   border-radius: 1.5rem !important;
@@ -15,7 +9,7 @@
 .login-input {
   padding: 1.125rem 1.25rem !important;
   border: 2px solid #e5e7eb !important;
-  background-color: #f9fafb !important;
+  background-color: #ffffff !important;
   border-radius: 50px !important;
   font-size: 0.9375rem;
   transition: all 0.2s ease;
@@ -27,42 +21,12 @@
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.1) !important;
 }
 
-.btn-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  transition: all 0.3s ease;
-  padding: 1.125rem !important;
-}
-
-.btn-gradient:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.btn-gradient:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn-gradient:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transition: opacity 0.2s ease;
-}
-
-.gradient-text:hover {
-  opacity: 0.8;
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus,
+.login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 .min-vh-100 {
@@ -80,9 +44,5 @@
 
   .login-input {
     padding: 0.875rem 1rem !important;
-  }
-
-  .btn-gradient {
-    padding: 0.875rem !important;
   }
 }

@@ -74,12 +74,11 @@ const LandingPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', backgroundColor: '#ffffff', padding: '80px 24px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', padding: '80px 24px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
         
         {/* Left Side - Text Content */}
         <div>
-
           <h1 style={{ 
             fontSize: '3.5rem', 
             fontWeight: 800, 
@@ -92,26 +91,26 @@ const LandingPage: React.FC = () => {
             <span style={{ color: '#0061fe' }}>Engaging Quizzes</span>
           </h1>
 
-            <p className="fs-5 text-muted mb-4 lh-lg" style={{ maxWidth: '500px' }}>
-              Create interactive quizzes with Factify, test knowledge, 
-              and track your progress. Build quizzes in minutes and share them with your team or students.
-            </p>
+          <p className="fs-5 text-muted mb-4 lh-lg" style={{ maxWidth: '500px' }}>
+            Create interactive quizzes with Factify, test knowledge, 
+            and track your progress. Build quizzes in minutes and share them with your team or students.
+          </p>
 
-            <button
-              onClick={() => navigate('/register')}
-              className="btn btn-primary btn-lg mb-3"
-            >
-              Get Started →
-            </button>
+          <button
+            onClick={() => navigate('/register')}
+            className="btn btn-primary btn-lg mb-3"
+          >
+            Get Started →
+          </button>
 
-            <p className="small text-secondary">
-              Already have an account? <a href="/login" className="text-primary fw-bold text-decoration-none">Sign in</a>
-            </p>
-          </div>
+          <p className="small text-secondary">
+            Already have an account? <a href="/login" className="text-primary fw-bold text-decoration-none">Sign in</a>
+          </p>
+        </div>
 
-          {/* Right Side - Interactive Demo Quiz */}
-          <div className="col-lg-6">
-            <div className="card shadow-lg border-light rounded-4 quiz-card">
+        {/* Right Side - Interactive Demo Quiz */}
+        <div>
+          <div className="card shadow-lg border-light rounded-4 quiz-card">
               <div className="card-body p-5">
                 <div className="mb-4">
                   <div className="d-flex justify-content-between align-items-center mb-3">
@@ -212,7 +211,6 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
