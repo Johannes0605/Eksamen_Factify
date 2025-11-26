@@ -117,7 +117,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
 
   if (loading) {
     return (
-      <div className="d-flex align-items-center justify-content-center bg-white" style={{ minHeight: 'calc(100vh - 64px)' }}>
+      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)' }}>
         <div style={{ fontSize: '1.5rem', color: '#6b7280' }}>Loading quiz...</div>
       </div>
     );
@@ -125,7 +125,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
 
   if (!quiz) {
     return (
-      <div className="d-flex align-items-center justify-content-center bg-white" style={{ minHeight: 'calc(100vh - 64px)' }}>
+      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)' }}>
         <div style={{ fontSize: '1.5rem', color: '#dc3545' }}>Quiz not found</div>
       </div>
     );
@@ -136,7 +136,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
     const percentage = (score / totalPoints) * 100;
 
     return (
-      <div className="bg-white d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', padding: '24px' }}>
+      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', padding: '24px' }}>
         <div className="bg-light-custom rounded-xl p-5 border border-light-custom text-center" style={{ maxWidth: '600px', width: '100%' }}>
           <h2 style={{ fontSize: '2rem', fontWeight: 700, color: '#1e1919', marginBottom: '24px' }}>
             Quiz Completed
@@ -180,7 +180,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
   const allAnswered = quiz.questions.every((_, index) => answers[index] !== undefined);
 
   return (
-    <div className="bg-white" style={{ minHeight: 'calc(100vh - 64px)', padding: '40px 24px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', padding: '40px 24px' }}>
       <div className="container" style={{ maxWidth: '800px' }}>
         
         {/* Header */}

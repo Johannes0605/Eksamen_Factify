@@ -35,7 +35,7 @@ function Home() {
   };
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', backgroundColor: '#ffffff', padding: '80px 24px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #00d4ff 0%, #0066ff 100%)', padding: '80px 24px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start' }}>
         
         {/* Left Side - User Quizzes */}
