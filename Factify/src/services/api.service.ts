@@ -113,6 +113,16 @@ class ApiService {
     if (!response.ok) throw new Error('Failed to delete quiz');
   }
 
+  async duplicateQuiz(id: number): Promise<Quiz> {
+    const response = await fetch(`${API_BASE_URL}/quiz/${id}/duplicate`, {
+      method: 'POST',
+      headers: this.getAuthHeader()
+    });
+    
+    if (!response.ok) throw new Error('Failed to duplicate quiz');
+    return response.json();
+  }
+
   // TakeQuiz endpoints (juster basert på din TakeQuizController)
   async submitQuizAttempt(quizId: number, answers: any): Promise<any> {
     // Backend expects a body { QuizId, SelectedAnswers }

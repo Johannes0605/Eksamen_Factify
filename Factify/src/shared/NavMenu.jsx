@@ -15,9 +15,9 @@ export default function NavMenu() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm">
       <div className="container-lg">
-        {/* Logo/Brand - Links to Landing Page */}
+        {/* Logo/Brand - Links to Landing Page or Home based on auth */}
         <Link 
-          to="/" 
+          to={isAuthenticated ? "/home" : "/"} 
           className="navbar-brand fw-bold text-primary me-auto"
         >
           Factify

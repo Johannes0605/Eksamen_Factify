@@ -14,6 +14,9 @@ namespace QuizApp.Models
         [StringLength(500)]
         public string? Description { get; set; }
 
+        // Foreign key to User who created this quiz
+        public int UserId { get; set; }
+
         public List<Question> Questions { get; set; } = new();
     }
 }
