@@ -51,7 +51,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-container d-flex align-items-center justify-content-center min-vh-100 p-4">
+    <div className="register-container d-flex align-items-start justify-content-center min-vh-100" style={{ paddingTop: '50px' }}>
       <div className="register-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '480px' }}>
         <div className="card-body p-5">
           <div className="mb-5">
@@ -119,7 +119,7 @@ const Register: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary btn-lg w-100 rounded-pill"
+              className="btn btn-gradient btn-lg w-100 rounded-pill fw-semibold"
             >
               {loading ? 'Creating account...' : 'Register'}
             </button>
