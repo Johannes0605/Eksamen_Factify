@@ -6,7 +6,7 @@ const API_BASE_URL = (VITE_API ? `${String(VITE_API).replace(/\/$/, '')}/api` : 
 
 class ApiService {
   private getAuthHeader(): HeadersInit {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token && { 'Authorization': `Bearer ${token}` })
@@ -23,7 +23,7 @@ class ApiService {
     
     if (!response.ok) throw new Error('Login failed');
     const data = await response.json();
-    localStorage.setItem('authToken', data.token);
+    localStorage.setItem('token', data.token);
     return data;
   }
 
@@ -45,16 +45,16 @@ class ApiService {
       throw new Error(errorData?.message || 'Registration failed');
     }
     const result = await response.json();
-    localStorage.setItem('authToken', result.token);
+    localStorage.setItem('token', result.token);
     return result;
   }
 
   logout(): void {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('authToken');
+    return !!localStorage.getItem('token');
   }
 
   // Quiz endpoints
@@ -68,7 +68,7 @@ class ApiService {
   }
 
   async getQuizById(id: number): Promise<Quiz> {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
     const url = token ? `${API_BASE_URL}/quiz/${id}` : `${API_BASE_URL}/quiz/public/${id}`;
     const response = await fetch(url, token ? { headers: this.getAuthHeader() } : undefined);
 
