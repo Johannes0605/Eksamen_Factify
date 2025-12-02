@@ -195,6 +195,94 @@ namespace api.Tests
             Assert.IsType<UnauthorizedObjectResult>(actionResult.Result);
         }
 
+        [Fact]
+        public async Task ForgotPassword_WithExistingEmail_ShouldReturnOk()
+        {
+            // Arrange
+            var user = new User
+            {
+                Username = "testuser",
+                Email = "test@example.com",
+                PasswordHash = "hashed_password"
+            };
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var request = new ForgotPasswordRequest(Email: "test@example.com");
+
+            // Act
+            var result = await _controller.ForgotPassword(request);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.NotNull(okResult.Value);
+            
+            // Verify that logger was called with the reset token
+            _mockLogger.Verify(
+                x => x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Password reset token")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task ForgotPassword_WithNonExistentEmail_ShouldReturnOk()
+        {
+            // Arrange
+            var request = new ForgotPasswordRequest(Email: "nonexistent@example.com");
+
+            // Act
+            var result = await _controller.ForgotPassword(request);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.NotNull(okResult.Value);
+            
+            // Verify that logger was called with non-existent email message
+            _mockLogger.Verify(
+                x => x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("non-existent email")),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task ForgotPassword_ShouldAlwaysReturnSameMessage()
+        {
+            // Arrange
+            var user = new User
+            {
+                Username = "testuser",
+                Email = "test@example.com",
+                PasswordHash = "hashed_password"
+            };
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var existingEmailRequest = new ForgotPasswordRequest(Email: "test@example.com");
+            var nonExistentEmailRequest = new ForgotPasswordRequest(Email: "nonexistent@example.com");
+
+            // Act
+            var result1 = await _controller.ForgotPassword(existingEmailRequest);
+            var result2 = await _controller.ForgotPassword(nonExistentEmailRequest);
+
+            // Assert
+            var okResult1 = Assert.IsType<OkObjectResult>(result1);
+            var okResult2 = Assert.IsType<OkObjectResult>(result2);
+            
+            // Both should return the same generic message (security practice)
+            var message1 = okResult1.Value?.GetType().GetProperty("message")?.GetValue(okResult1.Value);
+            var message2 = okResult2.Value?.GetType().GetProperty("message")?.GetValue(okResult2.Value);
+            
+            Assert.Equal(message1, message2);
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

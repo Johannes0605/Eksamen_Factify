@@ -32,9 +32,29 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
   const loadQuiz = async () => {
     try {
       const data = await apiService.getQuizById(quizId!);
-      setQuiz(data);
+      
+      // Normalize the quiz data to match frontend structure
+      const normalizedQuiz = {
+        ...data,
+        questions: (data.questions || []).map((q: any) => ({
+          questionId: q.questionId || 0,
+          quizId: q.quizId || 0,
+          questionText: q.questionText || '',
+          points: q.points || 1,
+          answerOptions: (q.options || []).map((opt: any) => ({
+            answerOptionId: opt.optionsId || 0,
+            questionId: opt.questionId || q.questionId || 0,
+            answerText: opt.text || '',
+            isCorrect: opt.isCorrect || false
+          }))
+        }))
+      };
+      
+      console.log('Normalized quiz data:', normalizedQuiz);
+      setQuiz(normalizedQuiz);
     } catch (err) {
       setError('Could not load quiz');
+      console.error('Error loading quiz:', err);
     }
   };
 
@@ -44,10 +64,28 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
     setError('');
 
     try {
+      // Convert frontend format to backend format
+      const backendQuiz: any = {
+        quizId: quiz.quizId,
+        title: quiz.title,
+        description: quiz.description,
+        questions: (quiz.questions || []).map((q: any) => ({
+          questionId: q.questionId || 0,
+          quizId: q.quizId || 0,
+          questionText: q.questionText,
+          options: (q.answerOptions || []).map((opt: any) => ({
+            optionsId: opt.answerOptionId || 0,
+            questionId: q.questionId || 0,
+            text: opt.answerText,
+            isCorrect: opt.isCorrect
+          }))
+        }))
+      };
+
       if (quizId) {
-        await apiService.updateQuiz(quizId, quiz as Quiz);
+        await apiService.updateQuiz(quizId, backendQuiz);
       } else {
-        await apiService.createQuiz(quiz as Omit<Quiz, 'quizId'>);
+        await apiService.createQuiz(backendQuiz);
       }
       
       if (onSave) {
@@ -57,6 +95,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
       }
     } catch (err) {
       setError('Could not save quiz');
+      console.error('Error saving quiz:', err);
     } finally {
       setLoading(false);
     }
@@ -64,11 +103,12 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
   const addQuestion = () => {
     const newQuestion: Partial<Question> = {
+      questionId: 0,
       questionText: '',
       points: 1,
       answerOptions: [
-        { answerText: '', isCorrect: false } as AnswerOption,
-        { answerText: '', isCorrect: false } as AnswerOption
+        { answerOptionId: 0, questionId: 0, answerText: '', isCorrect: false } as AnswerOption,
+        { answerOptionId: 0, questionId: 0, answerText: '', isCorrect: false } as AnswerOption
       ]
     };
     setQuiz({
@@ -91,12 +131,16 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
   const addAnswerOption = (questionIndex: number) => {
     const questions = [...(quiz.questions || [])];
+    const questionId = questions[questionIndex].questionId || 0;
     const newOption: AnswerOption = {
       answerOptionId: 0,
-      questionId: questions[questionIndex].questionId,
+      questionId: questionId,
       answerText: '',
       isCorrect: false
     };
+    if (!questions[questionIndex].answerOptions) {
+      questions[questionIndex].answerOptions = [];
+    }
     questions[questionIndex].answerOptions.push(newOption);
     setQuiz({ ...quiz, questions });
   };
@@ -228,19 +272,6 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                       />
                     </div>
 
-                    {/* Question Points */}
-                    <div className="mb-4">
-                      <label className="form-label small fw-semibold">Points</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={question.points}
-                        onChange={(e) => updateQuestion(qIndex, 'points', parseInt(e.target.value))}
-                        min="1"
-                        required
-                      />
-                    </div>
-
                     {/* Answer Options */}
                     <div>
                       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -257,46 +288,52 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                       </div>
 
                       <div className="d-flex flex-column gap-3">
-                        {question.answerOptions?.map((option, oIndex) => (
-                          <div 
-                            key={oIndex}
-                            className="d-flex align-items-center gap-3 bg-light-custom p-3 rounded-lg border border-light-custom"
-                          >
-                            <input
-                              type="text"
-                              className="form-control"
-                              value={option.answerText}
-                              onChange={(e) => updateAnswerOption(qIndex, oIndex, 'answerText', e.target.value)}
-                              placeholder={`Option ${oIndex + 1}`}
-                              required
-                            />
-                            
-                            <div className="form-check mb-0">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                id={`correct-${qIndex}-${oIndex}`}
-                                checked={option.isCorrect}
-                                onChange={(e) => updateAnswerOption(qIndex, oIndex, 'isCorrect', e.target.checked)}
-                              />
-                              <label 
-                                className="form-check-label fw-semibold small text-nowrap"
-                                htmlFor={`correct-${qIndex}-${oIndex}`}
-                                style={{ color: option.isCorrect ? 'var(--bs-success)' : 'var(--bs-secondary)', cursor: 'pointer' }}
-                              >
-                                Correct
-                              </label>
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={() => removeAnswerOption(qIndex, oIndex)}
-                              className="btn btn-outline-danger btn-sm"
+                        {(question.answerOptions && question.answerOptions.length > 0) ? (
+                          question.answerOptions.map((option, oIndex) => (
+                            <div 
+                              key={oIndex}
+                              className="d-flex align-items-center gap-3 bg-light-custom p-3 rounded-lg border border-light-custom"
                             >
-                              Remove
-                            </button>
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={option.answerText}
+                                onChange={(e) => updateAnswerOption(qIndex, oIndex, 'answerText', e.target.value)}
+                                placeholder={`Option ${oIndex + 1}`}
+                                required
+                              />
+                              
+                              <div className="form-check mb-0">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  id={`correct-${qIndex}-${oIndex}`}
+                                  checked={option.isCorrect}
+                                  onChange={(e) => updateAnswerOption(qIndex, oIndex, 'isCorrect', e.target.checked)}
+                                />
+                                <label 
+                                  className="form-check-label fw-semibold small text-nowrap"
+                                  htmlFor={`correct-${qIndex}-${oIndex}`}
+                                  style={{ color: option.isCorrect ? 'var(--bs-success)' : 'var(--bs-secondary)', cursor: 'pointer' }}
+                                >
+                                  Correct
+                                </label>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => removeAnswerOption(qIndex, oIndex)}
+                                className="btn btn-outline-danger btn-sm"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-center p-3 text-muted">
+                            <p className="mb-0">No options yet. Click "Add Option" to create one.</p>
                           </div>
-                        ))}
+                        )}
                       </div>
                     </div>
                   </div>
