@@ -66,23 +66,59 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
     setError('');
 
     try {
+      // Validation
+      if (!quiz.title?.trim()) {
+        setError('Quiz title is required');
+        setLoading(false);
+        return;
+      }
+
+      if (!quiz.questions || quiz.questions.length === 0) {
+        setError('Please add at least one question');
+        setLoading(false);
+        return;
+      }
+
+      // Validate each question
+      for (let i = 0; i < quiz.questions.length; i++) {
+        const q = quiz.questions[i];
+        if (!q.questionText?.trim()) {
+          setError(`Question ${i + 1} is missing text`);
+          setLoading(false);
+          return;
+        }
+        if (!q.answerOptions || q.answerOptions.length < 2) {
+          setError(`Question ${i + 1} needs at least 2 answer options`);
+          setLoading(false);
+          return;
+        }
+        const hasCorrectAnswer = q.answerOptions.some(opt => opt.isCorrect);
+        if (!hasCorrectAnswer) {
+          setError(`Question ${i + 1} needs at least one correct answer`);
+          setLoading(false);
+          return;
+        }
+      }
+
       // Convert frontend format to backend format
       const backendQuiz: any = {
-        quizId: quiz.quizId,
-        title: quiz.title,
-        description: quiz.description,
+        quizId: quiz.quizId || 0,
+        title: quiz.title.trim(),
+        description: quiz.description?.trim() || '',
         questions: (quiz.questions || []).map((q: any) => ({
           questionId: q.questionId || 0,
           quizId: q.quizId || 0,
-          questionText: q.questionText,
+          questionText: q.questionText.trim(),
           options: (q.answerOptions || []).map((opt: any) => ({
             optionsId: opt.answerOptionId || 0,
             questionId: q.questionId || 0,
-            text: opt.answerText,
-            isCorrect: opt.isCorrect
+            text: opt.answerText.trim(),
+            isCorrect: opt.isCorrect || false
           }))
         }))
       };
+
+      console.log('Saving quiz:', backendQuiz);
 
       if (quizId) {
         await apiService.updateQuiz(quizId, backendQuiz);
@@ -95,8 +131,8 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
       } else {
         navigate('/home');
       }
-    } catch (err) {
-      setError('Could not save quiz');
+    } catch (err: any) {
+      setError(err.message || 'Could not save quiz');
       console.error('Error saving quiz:', err);
     } finally {
       setLoading(false);
@@ -212,17 +248,10 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
             {/* Questions Section */}
             <div className="mb-4">
-              <div className="d-flex justify-content-between align-items-center mb-3">
+              <div className="mb-3">
                 <h3 className="fw-bold text-dark mb-0">
                   Questions ({quiz.questions?.length || 0})
                 </h3>
-                <button
-                  type="button"
-                  onClick={addQuestion}
-                  className="btn btn-success btn-sm rounded-pill"
-                >
-                  + Add Question
-                </button>
               </div>
 
               {quiz.questions?.length === 0 ? (
@@ -268,18 +297,9 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
                     {/* Answer Options */}
                     <div>
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <label className="form-label small fw-semibold mb-0">
-                          Answer Options ({question.answerOptions?.length || 0})
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => addAnswerOption(qIndex)}
-                          className="btn btn-primary btn-sm rounded-pill"
-                        >
-                          + Add Option
-                        </button>
-                      </div>
+                      <label className="form-label small fw-semibold mb-2">
+                        Answer Options ({question.answerOptions?.length || 0})
+                      </label>
 
                       <div className="d-flex flex-column gap-2">
                         {(question.answerOptions && question.answerOptions.length > 0) ? (
@@ -329,10 +349,30 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                           </div>
                         )}
                       </div>
+                      
+                      {/* Add Option Button Below Options */}
+                      <button
+                        type="button"
+                        onClick={() => addAnswerOption(qIndex)}
+                        className="btn btn-primary btn-sm w-100 rounded-pill mt-2"
+                      >
+                        + Add Option
+                      </button>
                     </div>
                   </div>
                 ))
               )}
+              
+              {/* Add Question Button at Bottom */}
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={addQuestion}
+                  className="btn btn-success w-100 rounded-pill"
+                >
+                  + Add Question
+                </button>
+              </div>
             </div>
 
             {/* Form Actions */}
