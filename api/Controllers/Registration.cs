@@ -32,10 +32,31 @@ namespace api.Controllers
         {
             try
             {
+                // Validate username and get detailed error messages
+                var usernameErrors = GetUsernameErrors(request.Username);
+                if (usernameErrors.Count > 0)
+                {
+                    return BadRequest(new { message = string.Join(", ", usernameErrors) });
+                }
+
+                // Validate password strength and get detailed error messages
+                var passwordErrors = GetPasswordErrors(request.Password);
+                if (passwordErrors.Count > 0)
+                {
+                    return BadRequest(new { message = string.Join(", ", passwordErrors) });
+                }
+
+                // Validate email format
+                var emailErrors = GetEmailErrors(request.Email);
+                if (emailErrors.Count > 0)
+                {
+                    return BadRequest(new { message = string.Join(", ", emailErrors) });
+                }
+
                 // Check if email is already registered
                 if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 {
-                    return BadRequest(new { message = "Email already registered" });
+                    return BadRequest(new { message = "This email address is already registered. Please use a different email or log in if you already have an account" });
                 }
 
                 // Check if username is already taken
@@ -104,6 +125,45 @@ namespace api.Controllers
             }
         }
 
+<<<<<<< HEAD
+        // Validates password strength and returns detailed error messages
+        private List<string> GetPasswordErrors(string password)
+        {
+            var errors = new List<string>();
+
+            // Check minimum length of 8 characters
+            if (password.Length < 8)
+                errors.Add("Password must be at least 8 characters long");
+
+            // Check for at least one uppercase letter
+            if (!password.Any(char.IsUpper))
+                errors.Add("Password must contain at least one uppercase letter");
+
+            // Check for at least one digit
+            if (!password.Any(char.IsDigit))
+                errors.Add("Password must contain at least one number");
+
+            return errors;
+        }
+
+        // Validates email format and returns detailed error messages
+        private List<string> GetEmailErrors(string email)
+        {
+            var errors = new List<string>();
+
+            // Check if email is empty
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                errors.Add("Email is required");
+                return errors;
+            }
+
+            // Check if email contains @ symbol
+            if (!email.Contains("@"))
+                errors.Add("Email must contain an @ symbol (example: user@example.com)");
+
+            return errors;
+=======
         // Handles password reset request
         [HttpPost("forgot-password")]
         public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
@@ -140,6 +200,7 @@ namespace api.Controllers
                 _logger.LogError(ex, "Error during password reset request");
                 return StatusCode(500, new { message = "An error occurred while processing your request" });
             }
+>>>>>>> e2f0c38f9b18ab002c8686dd4af8eee1a6f1a6f0
         }
     }
 }
