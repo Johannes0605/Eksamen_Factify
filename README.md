@@ -46,9 +46,12 @@ A modern, full-stack quiz application built for educational purposes. Factify en
 Before you begin, ensure you have the following installed:
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js 18+](https://nodejs.org/) and npm
+- [Node.js 22.19.0](https://nodejs.org/) (or Node.js 18+)
+- npm (comes with Node.js)
 - [Git](https://git-scm.com/)
 - A code editor (Visual Studio Code recommended)
+
+**Important:** This project was built and tested with **Node.js v22.19.0**. While Node.js 18+ should work, we recommend using v22.19.0 for best compatibility.
 
 ## Installation & Setup
 
@@ -106,6 +109,24 @@ npm run dev
 ```
 
 This uses `concurrently` to run both backend and frontend servers simultaneously.
+
+## Login & Access
+
+The application allows free registration - examiners can create a new account at `/register`.
+
+**Option 1: Use Pre-configured Test Account**
+
+A test account is already registered in the database:
+
+**Username:** `Testbruker`  
+**Email:** `test@bruker.com`  
+**Password:** `Test123!`
+
+**Option 2: Create Your Own Account**
+1. Navigate to `http://localhost:5173`
+2. Click "Register" 
+3. Fill in username, email, and password
+4. Login with your credentials
 
 ## Project Structure
 
