@@ -43,8 +43,18 @@ const Register: React.FC = () => {
     try {
       await register(formData.username, formData.email, formData.password);
       navigate('/home');
-    } catch (err) {
-      setError('Registration failed');
+    } catch (err: any) {
+      const errorMessage = err.message || 'Registration failed';
+      
+      // Check if the error is about email already being registered
+      if (errorMessage.toLowerCase().includes('email already registered')) {
+        setError('This email is already in use. Redirecting to login...');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

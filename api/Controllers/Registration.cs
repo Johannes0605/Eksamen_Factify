@@ -103,5 +103,43 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred during login" });
             }
         }
+
+        // Handles password reset request
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            try
+            {
+                // Find user by email
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == request.Email);
+
+                // Always return success even if user doesn't exist (security: don't reveal if email exists)
+                if (user == null)
+                {
+                    _logger.LogInformation("Password reset requested for non-existent email: {Email}", request.Email);
+                    return Ok(new { message = "If the email exists, password reset instructions have been sent" });
+                }
+
+                // Generate a simple reset token (for demo purposes - in production use secure tokens)
+                var resetToken = Guid.NewGuid().ToString();
+                
+                // In a real application, you would:
+                // 1. Save the reset token and expiration time to the database
+                // 2. Send an email with a link containing the token
+                // For now, we'll just log it
+                _logger.LogInformation("Password reset token for {Email}: {Token}", user.Email, resetToken);
+
+                // TODO: Implement email sending service
+                // await _emailService.SendPasswordResetEmail(user.Email, resetToken);
+
+                return Ok(new { message = "If the email exists, password reset instructions have been sent" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during password reset request");
+                return StatusCode(500, new { message = "An error occurred while processing your request" });
+            }
+        }
     }
 }
