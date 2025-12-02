@@ -41,6 +41,9 @@ const Login: React.FC = () => {
       const VITE_API = (import.meta as any).env?.VITE_API_URL;
       const API_BASE_URL = (VITE_API ? `${String(VITE_API).replace(/\/$/, '')}` : 'https://localhost:5001');
       
+      console.log('Sending forgot password request to:', `${API_BASE_URL}/api/account/forgot-password`);
+      console.log('Email:', resetEmail);
+      
       const response = await fetch(`${API_BASE_URL}/api/account/forgot-password`, {
         method: 'POST',
         headers: {
@@ -49,9 +52,16 @@ const Login: React.FC = () => {
         body: JSON.stringify({ email: resetEmail }),
       });
 
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
         throw new Error('Failed to send reset email');
       }
+
+      const data = await response.json();
+      console.log('Success response:', data);
 
       setResetMessage('Password reset instructions have been sent to your email.');
       setTimeout(() => {
@@ -60,6 +70,7 @@ const Login: React.FC = () => {
         setResetEmail('');
       }, 3000);
     } catch (err) {
+      console.error('Forgot password error:', err);
       setResetMessage('Failed to send reset email. Please try again.');
     } finally {
       setResetLoading(false);
