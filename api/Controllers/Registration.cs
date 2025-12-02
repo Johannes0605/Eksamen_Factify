@@ -32,31 +32,10 @@ namespace api.Controllers
         {
             try
             {
-                // Validate username and get detailed error messages
-                var usernameErrors = GetUsernameErrors(request.Username);
-                if (usernameErrors.Count > 0)
-                {
-                    return BadRequest(new { message = string.Join(", ", usernameErrors) });
-                }
-
-                // Validate password strength and get detailed error messages
-                var passwordErrors = GetPasswordErrors(request.Password);
-                if (passwordErrors.Count > 0)
-                {
-                    return BadRequest(new { message = string.Join(", ", passwordErrors) });
-                }
-
-                // Validate email format
-                var emailErrors = GetEmailErrors(request.Email);
-                if (emailErrors.Count > 0)
-                {
-                    return BadRequest(new { message = string.Join(", ", emailErrors) });
-                }
-
                 // Check if email is already registered
                 if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 {
-                    return BadRequest(new { message = "This email address is already registered. Please use a different email or log in if you already have an account" });
+                    return BadRequest(new { message = "Email already registered" });
                 }
 
                 // Check if username is already taken
@@ -125,6 +104,7 @@ namespace api.Controllers
             }
         }
 
+<<<<<<< HEAD
         // Validates password strength and returns detailed error messages
         private List<string> GetPasswordErrors(string password)
         {
@@ -187,6 +167,8 @@ namespace api.Controllers
             return errors;
         }
 
+=======
+>>>>>>> bdd1113c54bee0eed73dea74a2d558c0456bc48b
         // Handles password reset request
         [HttpPost("forgot-password")]
         public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
