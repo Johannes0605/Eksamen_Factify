@@ -1,8 +1,6 @@
 # Factify - Interactive Quiz Application
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Tests](https://img.shields.io/badge/tests-33%2F33%20passing-success)
-![Grade](https://img.shields.io/badge/grade-A%20(96%2F100)-success)
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)
 ![React](https://img.shields.io/badge/React-18.2-61DAFB)
 
