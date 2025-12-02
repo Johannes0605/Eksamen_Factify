@@ -15,7 +15,6 @@ A modern, full-stack quiz application built for educational purposes. Factify en
 - **Interactive Quiz Taking** - Take quizzes with instant feedback and scoring
 - **Quiz Sharing** - Share quiz links with anyone (public access)
 - **User Dashboard** - Manage all your quizzes in one place with sorting options
-- **Responsive Design** - Mobile-friendly interface built with Bootstrap
 - **Password Recovery** - Forgot password functionality with email notifications
 
 ## Technology Stack
@@ -46,20 +45,15 @@ A modern, full-stack quiz application built for educational purposes. Factify en
 Before you begin, ensure you have the following installed:
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js 22.19.0](https://nodejs.org/) (or Node.js 18+)
-- npm (comes with Node.js)
-- [Git](https://git-scm.com/)
+- [Node.js 18+](https://nodejs.org/) and npm
 - A code editor (Visual Studio Code recommended)
-
-**Important:** This project was built and tested with **Node.js v22.19.0**. While Node.js 18+ should work, we recommend using v22.19.0 for best compatibility.
 
 ## Installation & Setup
 
-### 1. Clone the Repository
+### 1. Download the .zip file
 
 ```bash
-git clone https://github.com/Johannes0605/Eksamen_Factify.git
-cd Eksamen_Factify
+Open the .zip file in VScode.
 ```
 
 ### 2. Backend Setup
@@ -67,15 +61,12 @@ cd Eksamen_Factify
 ```bash
 cd api
 
-# Restore NuGet packages
+#Restore NuGet packages
 dotnet restore
 
-# Initialize user secrets for JWT configuration
-dotnet user-secrets init
-dotnet user-secrets set "Jwt:Key" "your-secret-key-must-be-at-least-32-characters-long"
-
 # Apply database migrations
-dotnet ef database update
+dotnet ef database update 
+#If ef is not installed you have to run dotnet tool install --global dotnet-ef
 
 # Run the API
 dotnet run
@@ -90,9 +81,6 @@ cd Factify
 
 # Install dependencies
 npm install
-
-# Configure environment variables (create .env file)
-echo "VITE_API_URL=https://localhost:5001" > .env
 
 # Start development server
 npm run dev
@@ -109,24 +97,6 @@ npm run dev
 ```
 
 This uses `concurrently` to run both backend and frontend servers simultaneously.
-
-## Login & Access
-
-The application allows free registration - examiners can create a new account at `/register`.
-
-**Option 1: Use Pre-configured Test Account**
-
-A test account is already registered in the database:
-
-**Username:** `Testbruker`  
-**Email:** `test@bruker.com`  
-**Password:** `Test123!`
-
-**Option 2: Create Your Own Account**
-1. Navigate to `http://localhost:5173`
-2. Click "Register" 
-3. Fill in username, email, and password
-4. Login with your credentials
 
 ## Project Structure
 
@@ -187,20 +157,6 @@ Factify follows a **3-tier architecture** with clear separation of concerns:
 └─────────────────────────────────────────┘
 ```
 
-### Frontend Architecture
-
-- **Component-based** React architecture
-- **Context API** for global state (authentication)
-- **Service layer** for API communication
-- **Type-safe** development with TypeScript
-
-### Key Design Patterns
-
-- **Repository Pattern** - Data access abstraction
-- **Dependency Injection** - Loose coupling and testability
-- **DTO Pattern** - Clean API contracts
-- **JWT Authentication** - Stateless authentication
-- **React Hooks** - Modern React development
 
 ## Testing
 
@@ -224,69 +180,6 @@ dotnet test
 3. **Authorization Tests** - User ownership verification
 4. **Service Layer Tests** - Password hashing, JWT generation
 
-## Security Features
-
-- **BCrypt Password Hashing** - Industry-standard password security with automatic salting
-- **JWT Authentication** - Secure, stateless authentication tokens
-- **User Secrets** - JWT keys stored securely (not in source control)
-- **CORS Policy** - Restricted to specific origins to prevent CSRF attacks
-- **Input Validation** - FluentValidation for comprehensive input sanitization
-- **SQL Injection Protection** - EF Core parameterized queries
-
-## Coding Standards
-
-### Backend (C#)
-- Follow [Microsoft C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
-- Use async/await for all I/O operations
-- Implement proper exception handling and logging
-- Write XML documentation for public APIs
-- Use dependency injection for loose coupling
-
-### Frontend (TypeScript/React)
-- Follow [Airbnb React Style Guide](https://github.com/airbnb/javascript/tree/master/react)
-- Use functional components with hooks
-- Implement proper TypeScript typing
-- Keep components small and focused
-- Use meaningful variable and function names
-
-## Development Workflow
-
-### Branch Strategy
-- `main` - Production-ready code
-- `develop` - Integration branch for features
-- Feature branches - `feature/feature-name`
-
-### CI/CD Pipeline
-
-GitHub Actions automatically runs on push/PR:
-
-1. **Backend Tests** - Runs all .NET unit tests
-2. **Frontend Tests** - Linting and build verification
-3. **Build Check** - Ensures both projects build successfully
-
-## Performance Optimizations
-
-- **Database Indexes** - Optimized queries on User.Email and Quiz filtering (10-100x faster)
-- **SQL Filtering** - Filter data in database instead of memory
-- **React Memoization** - useMemo for expensive computations
-- **Lazy Loading** - Components loaded on-demand
-- **Connection Pooling** - Efficient database connections
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Code Review Checklist
-
-- [ ] All tests passing
-- [ ] Code follows project coding standards
-- [ ] No security vulnerabilities introduced
-- [ ] Documentation updated if needed
-- [ ] Performance considerations addressed
 
 ## API Documentation
 
@@ -312,36 +205,15 @@ Once the backend is running, visit:
 - `GET /api/takequiz/{id}` - Get quiz for taking
 - `POST /api/takequiz/submit` - Submit quiz answers
 
-## Known Issues & Future Enhancements
-
-### Known Limitations
-- Password reset tokens are logged but not sent via email (demo mode)
-- No actual email service integration (requires SMTP/SendGrid)
-
-### Planned Features
-- Email integration for password reset
-- Quiz categories and tags
-- Leaderboards and user statistics
-- Quiz templates
-- Import/export quizzes
-- Rich text editor for questions
-- Image support in questions
-
 ## License
 
 This project is an educational assignment for OsloMET. All rights reserved.
 
-## Authors
-
-- **Johannes** - [@Johannes0605](https://github.com/Johannes0605)
-- **Sunniva** - [@Sunniva-Sorensen](https://github.com/Sunniva-Sorensen)
 
 ## Acknowledgments
 
 - OsloMET - Oslo Metropolitan University
-- Course: Web Applications Development
-- Exam Project - Fall 2024
+- Course: ITPE3200 web applications
+- Exam Project - Fall 2025
 
-## Support
 
-For questions or issues, please open an issue on GitHub.
