@@ -1,0 +1,104 @@
+flowchart LR
+
+  %% Swimlanes
+  subgraph User
+    UStart["Start (Open app)"]
+  end
+
+  subgraph Frontend
+    FLanding["Show landing page"]
+    FNavigateRegister["Navigate to Register"]
+    FRegisterForm["Fill Register form"]
+    FValidateReg{Validate input?}
+    FPostRegister["POST /api/account/register"]
+    FStoreToken["Store token & user in localStorage"]
+    FShowError["Show error message"]
+
+    FNavigateLogin["Navigate to Login"]
+    FLoginForm["Fill Login form"]
+    FValidateLogin{Validate input?}
+    FPostLogin["POST /api/account/login"]
+
+    FViewQuizzes["View quiz list"]
+    FOpenQuiz["Open quiz details"]
+    FStartQuiz["Start quiz / show questions"]
+    FChooseAnswer["Choose answer"]
+    FSubmitAttempt["POST /api/takequiz/submit"]
+    FShowResult["Show results"]
+
+    FCreateQuiz["Open create quiz"]
+    FValidateQuiz{Validate quiz data?}
+    FPostCreate["POST /api/quiz"]
+  end
+
+  subgraph API
+    AAccount["AccountController register/login"]
+    AQuiz["QuizController CRUD /quiz"]
+    ATakeQuiz["TakeQuizController submit"]
+  end
+
+  subgraph Auth
+    AuthHash["HashPassword"]
+    AuthJwt["GenerateJwtToken / VerifyPassword"]
+  end
+
+  subgraph DB
+    DUsers[(Users table)]
+    DQuizzes[(Quizzes & Questions tables)]
+    DAttempts[(QuizAttempts)]
+  end
+
+  %% Main flow
+  UStart --> FLanding
+
+  %% Register flow
+  FLanding --> FNavigateRegister --> FRegisterForm --> FValidateReg
+  FValidateReg -- invalid --> FShowError
+  FValidateReg -- valid --> FPostRegister --> AAccount
+  AAccount --> DUsers
+  AAccount --> AuthHash
+  AuthHash --> AAccount
+  AAccount --> DUsers
+  AAccount --> AuthJwt
+  AuthJwt --> AAccount
+  AAccount --> FStoreToken --> FViewQuizzes
+  AAccount --> FShowError
+
+  %% Login flow
+  FLanding --> FNavigateLogin --> FLoginForm --> FValidateLogin
+  FValidateLogin -- invalid --> FShowError
+  FValidateLogin -- valid --> FPostLogin --> AAccount
+  AAccount --> DUsers
+  AAccount --> AuthJwt
+  AAccount --> FStoreToken --> FViewQuizzes
+  AAccount --> FShowError
+
+  %% View & take quiz flow
+  FViewQuizzes --> AQuiz
+  AQuiz --> FViewQuizzes
+  FViewQuizzes --> FOpenQuiz --> AQuiz
+  AQuiz --> FStartQuiz
+  FStartQuiz --> FChooseAnswer
+  FChooseAnswer --> FChooseAnswer
+  FChooseAnswer --> FSubmitAttempt --> ATakeQuiz
+  ATakeQuiz --> DAttempts
+  ATakeQuiz --> ATakeQuiz
+  ATakeQuiz --> FShowResult
+
+  %% Create quiz flow
+  FCreateQuiz --> FValidateQuiz
+  FValidateQuiz -- invalid --> FShowError
+  FValidateQuiz -- valid --> FPostCreate --> AQuiz
+  AQuiz --> DQuizzes
+  AQuiz --> FViewQuizzes
+
+  %% Auth note
+  NoteAuth["Authorization: Bearer token for protected endpoints"]
+  FPostCreate --- NoteAuth
+  FPostRegister --- NoteAuth
+  FPostLogin --- NoteAuth
+
+  %% End
+  FShowResult --> UEnd["End"]
+  FShowError --> UEnd
+  FViewQuizzes --> UEnd
