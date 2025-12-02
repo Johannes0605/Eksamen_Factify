@@ -4,6 +4,7 @@ using QuizApp.DAL;
 using api.DTOs;
 using QuizApp.Models;
 using api.Services;
+using FluentValidation;
 
 namespace api.Controllers
 {
@@ -15,36 +16,44 @@ namespace api.Controllers
         private readonly QuizDbContext _context;
         private readonly IAuthService _authService;
         private readonly ILogger<AccountController> _logger;
+        private readonly IValidator<RegisterRequest> _registerValidator;
 
         public AccountController(
             QuizDbContext context, 
             IAuthService authService,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IValidator<RegisterRequest> registerValidator)
         {
             _context = context;
             _authService = authService;
             _logger = logger;
+            _registerValidator = registerValidator;
         }
 
         // Creates a new user account
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult<AuthResponse>> Register(RegisterRequest request)
         {
             try
             {
-                // Modelvalidering (FluentValidation) skjer automatisk før denne koden,
-                // og returnerer 400 hvis noe er feil i request.
+                // Validate request using FluentValidation
+                var validationResult = await _registerValidator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return BadRequest(new { errors = errors });
+                }
 
                 // Check if email is already registered
                 if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 {
-                    return BadRequest(new { message = "Email already registered" });
+                    return BadRequest(new { errors = new List<string> { "Email already registered" } });
                 }
 
                 // Check if username is already taken
                 if (await _context.Users.AnyAsync(u => u.Username == request.Username))
                 {
-                    return BadRequest(new { message = "Username already taken" });
+                    return BadRequest(new { errors = new List<string> { "Username already taken" } });
                 }
 
                 // Create new user
@@ -107,6 +116,71 @@ namespace api.Controllers
             }
         }
 
+
+        // Validates password strength and returns detailed error messages
+        private List<string> GetPasswordErrors(string password)
+        {
+            var errors = new List<string>();
+
+            // Check minimum length of 8 characters
+            if (password.Length < 8)
+                errors.Add("Password must be at least 8 characters long");
+
+            // Check for at least one uppercase letter
+            if (!password.Any(char.IsUpper))
+                errors.Add("Password must contain at least one uppercase letter");
+
+            // Check for at least one digit
+            if (!password.Any(char.IsDigit))
+                errors.Add("Password must contain at least one number");
+
+            return errors;
+        }
+
+        // Validates email format and returns detailed error messages
+        private List<string> GetEmailErrors(string email)
+        {
+            var errors = new List<string>();
+
+            // Check if email is empty
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                errors.Add("Email is required");
+                return errors;
+            }
+
+            // Check if email contains @ symbol
+            if (!email.Contains("@"))
+                errors.Add("Email must contain an @ symbol (example: user@example.com)");
+
+            return errors;
+        }
+
+        // Validates username and returns detailed error messages
+        private List<string> GetUsernameErrors(string username)
+        {
+            var errors = new List<string>();
+
+            // Check if username is empty
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                errors.Add("Username is required");
+                return errors;
+            }
+
+            // Check minimum length
+            if (username.Length < 3)
+                errors.Add("Username must be at least 3 characters long");
+
+            // Check maximum length
+            if (username.Length > 20)
+                errors.Add("Username must be no more than 20 characters long");
+
+            return errors;
+        }
+
+
+
         // Handles password reset request
         [HttpPost("forgot-password")]
         public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
@@ -127,7 +201,14 @@ namespace api.Controllers
                 // Generate a simple reset token (for demo purposes - in production use secure tokens)
                 var resetToken = Guid.NewGuid().ToString();
                 
+                // In a real application, you would:
+                // 1. Save the reset token and expiration time to the database
+                // 2. Send an email with a link containing the token
+                // For now, we'll just log it
                 _logger.LogInformation("Password reset token for {Email}: {Token}", user.Email, resetToken);
+
+                // TODO: Implement email sending service
+                // await _emailService.SendPasswordResetEmail(user.Email, resetToken);
 
                 return Ok(new { message = "If the email exists, password reset instructions have been sent" });
             }
