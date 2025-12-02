@@ -38,7 +38,10 @@ const Login: React.FC = () => {
     setResetLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/account/forgot-password`, {
+      const VITE_API = (import.meta as any).env?.VITE_API_URL;
+      const API_BASE_URL = (VITE_API ? `${String(VITE_API).replace(/\/$/, '')}` : 'https://localhost:5001');
+      
+      const response = await fetch(`${API_BASE_URL}/api/account/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
