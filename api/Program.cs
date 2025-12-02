@@ -112,15 +112,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Enable CORS before auth middleware to handle preflight requests
 app.UseCors("AllowReactApp");
 
-// Add authentication & authorization middleware (ORDER MATTERS!)
-app.UseAuthentication();  // Reads and validates JWT tokens
-app.UseAuthorization();   // Checks if user has permission
+// Authentication & authorization middleware (ORDER MATTERS!)
+app.UseAuthentication();  // Reads and validates JWT tokens from request headers
+app.UseAuthorization();   // Checks if user has permission for requested endpoint
 
-app.MapControllers(); // Enable API controllers
+app.MapControllers(); // Map controller routes to endpoints
 
-// Seed the database with initial data
+// Initialize database with test data
 DBInit.Seed(app);
 
 app.Run();

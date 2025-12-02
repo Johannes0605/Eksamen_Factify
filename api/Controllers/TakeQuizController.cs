@@ -16,7 +16,7 @@ namespace QuizApp.Controllers
             _logger = logger;
         }
 
-        // GET api/takequiz/5
+        // GET api/takequiz/5 - Fetch quiz for taking (public endpoint)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetQuizForTaking(int id)
         {
@@ -26,7 +26,7 @@ namespace QuizApp.Controllers
             return Ok(quiz);
         }
 
-        // POST api/takequiz/submit
+        // POST api/takequiz/submit - Grade quiz attempt
         [HttpPost("submit")]
         public async Task<IActionResult> SubmitAnswers([FromBody] QuizSubmissionDto submission)
         {
@@ -36,19 +36,23 @@ namespace QuizApp.Controllers
             int score = 0;
             int total = quiz.Questions.Count;
 
+            // Check each question for correct answers
             foreach (var question in quiz.Questions)
             {
+                // Get all correct option IDs for this question
                 var correctAnswers = question.Options
                     .Where(o => o.IsCorrect)
                     .Select(o => o.OptionsId)
                     .OrderBy(id => id)
                     .ToList();
 
+                // Get user's selected options for this question
                 var chosen = submission.SelectedAnswers
                     .Where(id => question.Options.Any(o => o.OptionsId == id))
                     .OrderBy(id => id)
                     .ToList();
 
+                // Award point only if all correct answers selected
                 if (chosen.SequenceEqual(correctAnswers))
                     score++;
             }

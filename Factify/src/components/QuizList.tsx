@@ -32,12 +32,14 @@ const QuizList: React.FC<QuizListProps> = ({ onSelectQuiz, onCreateNew, onTakeQu
   };
 
   const handleDelete = async (id: number) => {
+    // Confirm deletion to prevent accidents
     if (!window.confirm('Are you sure you want to delete this quiz?')) {
       return;
     }
 
     try {
       await apiService.deleteQuiz(id);
+      // Remove from local state immediately for responsive UI
       setQuizzes(quizzes.filter(q => q.quizId !== id));
     } catch (err) {
       alert('Could not delete quiz');

@@ -28,7 +28,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    // Frontend validation to match backend rules
+    // Client-side validation matching backend requirements
     // Username validation
     if (!formData.username || formData.username.trim() === '') {
       setError('Username is required');
@@ -85,7 +85,7 @@ const Register: React.FC = () => {
     } catch (err: any) {
       const errorMessage = err.message || 'Registration failed';
       
-      // Check if the error is about email already being registered
+      // Redirect to login if email already exists (user-friendly)
       if (errorMessage.toLowerCase().includes('email already registered')) {
         setError('This email is already in use. Redirecting to login...');
         setTimeout(() => {

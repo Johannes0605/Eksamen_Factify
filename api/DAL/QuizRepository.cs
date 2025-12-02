@@ -50,6 +50,7 @@ namespace QuizApp.DAL
 
         public async Task UpdateQuizAsync(Quiz quiz)
         {
+            // Load existing quiz with all nested data
             var existingQuiz = await _context.Quizzes
                 .Include(q => q.Questions)
                     .ThenInclude(qs => qs.Options)
@@ -61,7 +62,7 @@ namespace QuizApp.DAL
                 existingQuiz.Title = quiz.Title;
                 existingQuiz.Description = quiz.Description;
 
-                // Remove questions that are no longer in the list
+                // Remove deleted questions (not in new list)
                 var questionsToRemove = existingQuiz.Questions
                     .Where(eq => !quiz.Questions.Any(nq => nq.QuestionId == eq.QuestionId))
                     .ToList();
@@ -71,18 +72,18 @@ namespace QuizApp.DAL
                     _context.Questions.Remove(question);
                 }
 
-                // Update or add questions
+                // Process each question in the updated quiz
                 foreach (var question in quiz.Questions)
                 {
                     if (question.QuestionId == 0)
                     {
-                        // New question
+                        // New question - add to quiz
                         question.QuizId = quiz.QuizId;
                         existingQuiz.Questions.Add(question);
                     }
                     else
                     {
-                        // Update existing question
+                        // Existing question - update properties
                         var existingQuestion = existingQuiz.Questions
                             .FirstOrDefault(q => q.QuestionId == question.QuestionId);
                         
@@ -90,7 +91,7 @@ namespace QuizApp.DAL
                         {
                             existingQuestion.QuestionText = question.QuestionText;
 
-                            // Remove options that are no longer in the list
+                            // Remove deleted options (not in new list)
                             var optionsToRemove = existingQuestion.Options
                                 .Where(eo => !question.Options.Any(no => no.OptionsId == eo.OptionsId))
                                 .ToList();
@@ -100,18 +101,18 @@ namespace QuizApp.DAL
                                 _context.Options.Remove(option);
                             }
 
-                            // Update or add options
+                            // Process each option
                             foreach (var option in question.Options)
                             {
                                 if (option.OptionsId == 0)
                                 {
-                                    // New option
+                                    // New option - add to question
                                     option.QuestionId = question.QuestionId;
                                     existingQuestion.Options.Add(option);
                                 }
                                 else
                                 {
-                                    // Update existing option
+                                    // Existing option - update properties
                                     var existingOption = existingQuestion.Options
                                         .FirstOrDefault(o => o.OptionsId == option.OptionsId);
                                     

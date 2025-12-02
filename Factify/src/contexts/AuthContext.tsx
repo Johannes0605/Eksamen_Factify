@@ -22,7 +22,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Load user and token from localStorage on mount
+    // Restore authentication state from localStorage on app load
+    // This keeps users logged in across page refreshes
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     
@@ -75,17 +76,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       
-      // Handle FluentValidation errors (returns { errors: ["msg1", "msg2"] })
+      // Backend can return different error formats - handle both
+      // FluentValidation returns array of error messages
       if (errorData?.errors && Array.isArray(errorData.errors)) {
         throw new Error(errorData.errors[0]); // Show first error
       }
       
-      // Handle single message error (returns { message: "msg" })
+      // Single message error (e.g., duplicate email)
       if (errorData?.message) {
         throw new Error(errorData.message);
       }
       
-      // Fallback
+      // Fallback for unexpected error formats
       throw new Error('Registration failed');
     }
 

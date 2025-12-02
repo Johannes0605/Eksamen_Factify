@@ -35,7 +35,8 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
     try {
       const data = await apiService.getQuizById(quizId!);
       
-      // Normalize the quiz data to match frontend structure
+      // Transform backend format to match frontend types
+      // Backend: 'options' + 'text', Frontend: 'answerOptions' + 'answerText'
       const normalizedQuiz = {
         ...data,
         questions: (data.questions || []).map((q: any) => ({
@@ -66,7 +67,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
     setError('');
 
     try {
-      // Validation
+      // Validate quiz before saving
       if (!quiz.title?.trim()) {
         setError('Quiz title is required');
         setLoading(false);
@@ -79,7 +80,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
         return;
       }
 
-      // Validate each question
+      // Validate each question has required data
       for (let i = 0; i < quiz.questions.length; i++) {
         const q = quiz.questions[i];
         if (!q.questionText?.trim()) {
@@ -100,7 +101,8 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
         }
       }
 
-      // Convert frontend format to backend format
+      // Transform frontend format back to backend expected format
+      // Frontend: 'answerOptions' + 'answerText', Backend: 'options' + 'text'
       const backendQuiz: any = {
         quizId: quiz.quizId || 0,
         title: quiz.title.trim(),

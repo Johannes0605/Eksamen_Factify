@@ -39,7 +39,8 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
       const data = await apiService.getQuizById(quizId);
       console.log('Raw quiz data from API:', data);
 
-      // Normalize backend shape to frontend expected shape:
+      // Transform backend data structure to match frontend types
+      // Backend uses 'options' and 'text', frontend expects 'answerOptions' and 'answerText'
       const normalized = {
         ...data,
         questions: (data.questions || []).map((q: any) => {
@@ -48,6 +49,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
             quizId: q.quizId ?? 0,
             questionText: q.questionText ?? '',
             points: q.points ?? 1,
+            // Map backend 'options' to frontend 'answerOptions'
             answerOptions: (q.options || []).map((opt: any) => ({
               answerOptionId: opt.optionsId ?? 0,
               questionId: opt.questionId ?? q.questionId ?? 0,
@@ -92,6 +94,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
   const handleSubmit = async () => {
     if (!quiz) return;
 
+    // Calculate score locally for immediate feedback
     let calculatedScore = 0;
     let totalPoints = 0;
 
@@ -108,7 +111,7 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
     setScore(calculatedScore);
     setShowResults(true);
 
-    // Only submit if authenticated
+    // Submit to backend for tracking (authenticated users only)
     if (isAuthenticated) {
       try {
         await apiService.submitQuizAttempt(quizId, { answers });

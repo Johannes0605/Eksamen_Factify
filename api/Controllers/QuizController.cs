@@ -22,14 +22,14 @@ namespace QuizApp.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Quiz>>> GetAllQuizzes()
         {
+            // Extract user ID from JWT token claims
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
             {
                 return Unauthorized();
             }
 
-            // Filter in SQL instead of loading all quizzes into memory
-            var userQuizzes = await _quizRepository.GetQuizzesByUserIdAsync(userId);
+            // Retrieve only quizzes belonging to this user (filtered in SQL)\n            var userQuizzes = await _quizRepository.GetQuizzesByUserIdAsync(userId);
             return Ok(userQuizzes);
         }
 
@@ -44,7 +44,7 @@ namespace QuizApp.Controllers
             return Ok(quiz);
         }
 
-        // POST: api/quiz
+        // POST: api/quiz - Create new quiz
         [HttpPost]
         public async Task<ActionResult> CreateQuiz([FromBody] Quiz quiz)
         {
@@ -54,14 +54,14 @@ namespace QuizApp.Controllers
                 return Unauthorized();
             }
 
-            // Set the UserId for the quiz
+            // Associate quiz with authenticated user
             quiz.UserId = userId;
             
             await _quizRepository.AddQuizAsync(quiz);
             return CreatedAtAction(nameof(GetQuizById), new { id = quiz.QuizId }, quiz);
         }
 
-        // PUT: api/quiz/5
+        // PUT: api/quiz/5 - Update existing quiz
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateQuiz(int id, [FromBody] Quiz quiz)
         {
@@ -74,18 +74,18 @@ namespace QuizApp.Controllers
                 return Unauthorized();
             }
 
-            // Verify the quiz belongs to the user
+            // Verify ownership before allowing update
             var existingQuiz = await _quizRepository.GetQuizByIdAsync(id);
             if (existingQuiz == null)
                 return NotFound();
             if (existingQuiz.UserId != userId)
-                return Forbid();
+                return Forbid();  // User doesn't own this quiz
 
             await _quizRepository.UpdateQuizAsync(quiz);
             return NoContent();
         }
 
-        // DELETE: api/quiz/5
+        // DELETE: api/quiz/5 - Delete quiz
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteQuiz(int id)
         {
@@ -99,15 +99,15 @@ namespace QuizApp.Controllers
             if (quiz == null)
                 return NotFound();
 
-            // Verify the quiz belongs to the user
+            // Verify ownership before allowing deletion
             if (quiz.UserId != userId)
-                return Forbid();
+                return Forbid();  // User doesn't own this quiz
 
             await _quizRepository.DeleteQuizAsync(id);
             return NoContent();
         }
 
-        // POST: api/quiz/{id}/duplicate
+        // POST: api/quiz/{id}/duplicate - Create a copy of an existing quiz
         [HttpPost("{id}/duplicate")]
         public async Task<ActionResult> DuplicateQuiz(int id)
         {
@@ -121,12 +121,12 @@ namespace QuizApp.Controllers
             if (originalQuiz == null)
                 return NotFound();
 
-            // Create a copy of the quiz
+            // Deep copy quiz with all questions and options
             var duplicatedQuiz = new Quiz
             {
                 Title = originalQuiz.Title + " Copy",
                 Description = originalQuiz.Description,
-                UserId = userId,
+                UserId = userId,  // Assign to current user
                 CreatedDate = DateTime.UtcNow,
                 LastUsedDate = DateTime.UtcNow,
                 Questions = originalQuiz.Questions.Select(q => new Question

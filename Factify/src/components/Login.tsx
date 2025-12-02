@@ -23,6 +23,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
+      // Authenticate user and redirect to home on success
       await login(email, password);
       navigate('/home');
     } catch (err) {
@@ -38,18 +39,20 @@ const Login: React.FC = () => {
     setResetLoading(true);
 
     try {
+      // Build API URL from environment variable
       const VITE_API = (import.meta as any).env?.VITE_API_URL;
       const API_BASE_URL = (VITE_API ? `${String(VITE_API).replace(/\/$/, '')}` : 'https://localhost:5001');
       
       console.log('Sending forgot password request to:', `${API_BASE_URL}/api/account/forgot-password`);
       console.log('Email:', resetEmail);
       
+      // Request password reset from backend
       const response = await fetch(`${API_BASE_URL}/api/account/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: resetEmail }),
+        body: JSON.stringify({ email: resetEmail })
       });
 
       console.log('Response status:', response.status);

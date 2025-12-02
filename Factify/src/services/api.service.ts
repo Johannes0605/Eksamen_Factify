@@ -28,8 +28,8 @@ class ApiService {
   }
 
   async register(data: any): Promise<AuthResponse> {
-    // Backend RegisterRequest only expects: username, email, password
-    // Strip confirmPassword if present (validation done on frontend)
+    // Extract only fields expected by backend API
+    // confirmPassword is frontend-only (not sent to server)
     const { username, email, password } = data;
     const body = { username, email, password };
     
@@ -68,6 +68,8 @@ class ApiService {
   }
 
   async getQuizById(id: number): Promise<Quiz> {
+    // Include auth token if available (for owned quizzes)
+    // but also work without token (for public quiz viewing)
     const token = localStorage.getItem('token');
     const headers = token ? this.getAuthHeader() : { 'Content-Type': 'application/json' };
     
@@ -126,9 +128,9 @@ class ApiService {
     return response.json();
   }
 
-  // TakeQuiz endpoints (juster basert på din TakeQuizController)
+  // Submit quiz answers for grading
   async submitQuizAttempt(quizId: number, answers: any): Promise<any> {
-    // Backend expects a body { QuizId, SelectedAnswers }
+    // Format request to match backend DTO expectations
     const body = { QuizId: quizId, SelectedAnswers: Array.isArray(answers) ? answers : answers?.answers || [] };
     const response = await fetch(`${API_BASE_URL}/takequiz/submit`, {
       method: 'POST',

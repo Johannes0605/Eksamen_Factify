@@ -44,7 +44,7 @@ namespace api.Controllers
                     return BadRequest(new { errors = errors });
                 }
 
-                // Check if email is already registered
+                // Check if email is already registered (prevent duplicate accounts)
                 if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 {
                     return BadRequest(new { errors = new List<string> { "Email already registered" } });
@@ -56,7 +56,7 @@ namespace api.Controllers
                     return BadRequest(new { errors = new List<string> { "Username already taken" } });
                 }
 
-                // Create new user
+                // Create new user with hashed password
                 var user = new User
                 {
                     Username = request.Username,
@@ -126,7 +126,7 @@ namespace api.Controllers
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-                // Always return success even if user doesn't exist (security: don't reveal if email exists)
+                // Return success message regardless (security: don't reveal if email exists)
                 if (user == null)
                 {
                     _logger.LogInformation("Password reset requested for non-existent email: {Email}", request.Email);
