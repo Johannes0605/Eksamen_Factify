@@ -75,7 +75,7 @@ namespace api.Services
                 issuer: _config["Jwt:Issuer"] ?? "factify-api",       // Who created the token
                 audience: _config["Jwt:Audience"] ?? "factify-client", // Who can use the token
                 claims: claims,                                        // User data in token
-                expires: DateTime.UtcNow.AddDays(1),                  // Token valid for 1 day
+                expires: DateTime.UtcNow.AddHours(1),                 // Token valid for 1 hour
                 signingCredentials: creds                              // How to verify token
             );
 

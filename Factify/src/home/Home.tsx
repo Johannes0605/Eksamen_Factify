@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import apiService from '../services/api.service';
 import { Quiz } from '../types/quiz.types';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Home.css';
 
 function Home() {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -86,414 +88,227 @@ function Home() {
     }
   };
 
-  if (loading) return <p style={{ color: '#ffffff', padding: '80px 24px' }}>Loading quizzes...</p>;
-  if (error) return <p style={{ color: '#ef4444', padding: '80px 24px' }}>{error}</p>;
+  if (loading) return <div className="text-white p-5" style={{ minHeight: 'calc(100vh - 64px)' }}>Loading quizzes...</div>;
+  if (error) return <div className="text-danger p-5" style={{ minHeight: 'calc(100vh - 64px)' }}>{error}</div>;
 
   const handleTakeQuiz = (quizId: number) => {
     navigate(`/take-quiz/${quizId}`);
   };
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '80px 24px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ 
-            fontSize: '2.5rem', 
-            fontWeight: 800, 
-            marginBottom: '8px',
-            color: '#ffffff'
-          }}>
-            Welcome back, <span style={{ color: '#60a5fa' }}>{user?.username}</span>!
+    <div className="home-container min-vh-100 py-5">
+      <div className="container-lg">
+        {/* Header */}
+        <div className="mb-5">
+          <h1 className="display-4 fw-bold text-white mb-3">
+            Welcome back, <span className="text-primary">{user?.username}</span>!
           </h1>
-          <p style={{ 
-            fontSize: '1.125rem', 
-            color: '#ffffff', 
-            marginBottom: '24px'
-          }}>
+          <p className="fs-5 text-white-50 mb-0">
             Here are all the available quizzes
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'start' }}>
+        <div className="row g-5">
           {/* Left Side - User Quizzes */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div className="col-lg-6">
+            <div className="d-flex justify-content-between align-items-center mb-4">
               <div></div>
               {quizzes.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '13px', color: '#e5e7eb', fontWeight: 500 }}>Sort:</span>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="small text-white-50 fw-500">Sort:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as 'created' | 'used')}
-                    style={{
-                      padding: '6px 10px',
-                      borderRadius: '6px',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      color: '#ffffff',
-                      fontSize: '13px',
-                      fontWeight: 500,
-                      cursor: 'pointer',
-                      outline: 'none'
-                    }}
+                    className="form-select form-select-sm home-sort-select"
                   >
-                    <option value="created" style={{ backgroundColor: '#1e40af', color: '#ffffff' }}>Date Created</option>
-                    <option value="used" style={{ backgroundColor: '#1e40af', color: '#ffffff' }}>Recently Used</option>
+                    <option value="created">Date Created</option>
+                    <option value="used">Recently Used</option>
                   </select>
                 </div>
               )}
             </div>
 
-          {quizzes.length === 0 ? (
-            <div style={{
-              backgroundColor: '#f9fafb',
-              borderRadius: '12px',
-              padding: '40px',
-              textAlign: 'center',
-              border: '2px dashed #d1d5db'
-            }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e1919', marginBottom: '8px' }}>
-                No quizzes yet
-              </h3>
-              <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '24px' }}>
-                Get started by creating your first quiz
-              </p>
-              <button
-                onClick={() => navigate('/quiz-form')}
-                style={{
-                  backgroundColor: '#0061fe',
-                  color: '#ffffff',
-                  padding: '14px 32px',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0052d9'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0061fe'}
-              >
-                Create your first quiz!
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {getSortedQuizzes().map((quiz: any) => (
-                <div 
-                  key={quiz.quizId} 
-                  onClick={() => setSelectedQuiz(quiz)}
-                  style={{
-                    backgroundColor: selectedQuiz?.quizId === quiz.quizId ? '#dbeafe' : '#f9fafb',
-                    borderRadius: '12px',
-                    padding: '20px',
-                    borderLeft: selectedQuiz?.quizId === quiz.quizId ? '5px solid #60a5fa' : '5px solid transparent',
-                    border: selectedQuiz?.quizId === quiz.quizId ? '2px solid #60a5fa' : '1px solid #e5e7eb',
-                    boxShadow: selectedQuiz?.quizId === quiz.quizId ? '0 4px 20px rgba(96, 165, 250, 0.4)' : 'none',
-                    cursor: 'pointer',
-                    position: 'relative'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ 
-                        fontSize: '1.25rem', 
-                        fontWeight: 700, 
-                        color: '#1e1919',
-                        marginBottom: '8px'
-                      }}>
-                        {quiz.title}
-                      </h3>
-                      <p style={{ 
-                        color: '#6b7280', 
-                        fontSize: '0.875rem',
-                        marginBottom: 0
-                      }}>
-                        {quiz.description}
-                      </p>
-                    </div>
-
-                    {/* Three-dot menu */}
-                    <div style={{ position: 'relative' }}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.nativeEvent.stopImmediatePropagation();
-                          setOpenMenuId(openMenuId === quiz.quizId ? null : quiz.quizId);
-                        }}
-                        style={{
-                          background: 'transparent',
-                          border: 'none',
-                          fontSize: '20px',
-                          cursor: 'pointer',
-                          padding: '4px 8px',
-                          color: '#6b7280'
-                        }}
-                      >
-                        ⋮
-                      </button>
-
-                      {openMenuId === quiz.quizId && (
-                        <div style={{
-                          position: 'absolute',
-                          right: 0,
-                          top: '100%',
-                          backgroundColor: '#ffffff',
-                          border: '1px solid #e5e7eb',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                          zIndex: 10,
-                          minWidth: '150px',
-                          overflow: 'hidden'
-                        }}>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEdit(quiz.quizId);
-                            }}
-                            style={{
-                              width: '100%',
-                              padding: '12px 16px',
-                              border: 'none',
-                              background: 'transparent',
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              fontSize: '14px',
-                              color: '#1e1919'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDuplicate(quiz.quizId);
-                            }}
-                            style={{
-                              width: '100%',
-                              padding: '12px 16px',
-                              border: 'none',
-                              background: 'transparent',
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              fontSize: '14px',
-                              color: '#1e1919'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                          >
-                            Duplicate
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleShare(quiz.quizId);
-                            }}
-                            style={{
-                              width: '100%',
-                              padding: '12px 16px',
-                              border: 'none',
-                              background: 'transparent',
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              fontSize: '14px',
-                              color: '#1e1919'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                          >
-                            Share
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDeleteConfirmId(quiz.quizId);
-                            }}
-                            style={{
-                              width: '100%',
-                              padding: '12px 16px',
-                              border: 'none',
-                              background: 'transparent',
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              fontSize: '14px',
-                              color: '#ef4444'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fef2f2'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right Side - Quiz Preview */}
-        <div style={{
-          backgroundColor: '#f9fafb',
-          borderRadius: '16px',
-          padding: '32px',
-          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb',
-          position: 'sticky',
-          top: '100px'
-        }}>
-          {selectedQuiz ? (
-            <>
-              <div style={{ marginBottom: '24px' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '8px',
-                  marginBottom: '12px'
-                }}>
-                  <div style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: '#0061fe'
-                  }}></div>
-                  <span style={{ fontSize: '14px', color: '#6b7280', fontWeight: 600 }}>QUIZ PREVIEW</span>
-                </div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e1919', marginBottom: '8px' }}>
-                  <span style={{ color: '#0061fe' }}>Take:</span> {selectedQuiz.title}
+            {quizzes.length === 0 ? (
+              <div className="bg-light rounded-3 p-5 text-center border border-2 border-dashed">
+                <h3 className="fw-bold text-dark mb-2">
+                  No quizzes yet
                 </h3>
-                <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '20px' }}>
-                  {selectedQuiz.description}
+                <p className="text-muted small mb-4">
+                  Get started by creating your first quiz
                 </p>
+                <button
+                  onClick={() => navigate('/quiz-form')}
+                  className="btn btn-primary"
+                >
+                  Create your first quiz!
+                </button>
               </div>
-
-              <div style={{ 
-                backgroundColor: '#ffffff',
-                borderRadius: '12px',
-                padding: '24px',
-                marginBottom: '20px',
-                maxHeight: '400px',
-                overflowY: 'auto'
-              }}>
-                {selectedQuiz.questions && selectedQuiz.questions.length > 0 ? (
-                  <div>
-                    <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#1e1919', marginBottom: '16px' }}>
-                      Questions ({selectedQuiz.questions.length})
-                    </h4>
-                    {selectedQuiz.questions.map((q: any, index: number) => (
-                      <div key={index} style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: index < selectedQuiz.questions.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
-                        <p style={{ color: '#1e1919', fontSize: '0.875rem' }}>
-                          {index + 1}. {q.questionText}
+            ) : (
+              <div className="d-flex flex-column gap-3">
+                {getSortedQuizzes().map((quiz: any) => (
+                  <div 
+                    key={quiz.quizId} 
+                    onClick={() => setSelectedQuiz(quiz)}
+                    className="quiz-item p-4 rounded-3 cursor-pointer"
+                    style={{
+                      backgroundColor: selectedQuiz?.quizId === quiz.quizId ? '#dbeafe' : '#f9fafb',
+                      borderLeft: selectedQuiz?.quizId === quiz.quizId ? '5px solid #60a5fa' : '5px solid transparent',
+                      border: selectedQuiz?.quizId === quiz.quizId ? '2px solid #60a5fa' : '1px solid #e5e7eb',
+                      boxShadow: selectedQuiz?.quizId === quiz.quizId ? '0 4px 20px rgba(96, 165, 250, 0.4)' : 'none'
+                    }}
+                  >
+                    <div className="d-flex justify-content-between align-items-start">
+                      <div className="flex-grow-1">
+                        <h3 className="fs-5 fw-bold text-dark mb-2">
+                          {quiz.title}
+                        </h3>
+                        <p className="text-muted small mb-0">
+                          {quiz.description}
                         </p>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ textAlign: 'center', color: '#9ca3af', padding: '20px' }}>
-                    <p style={{ fontSize: '0.875rem' }}>No questions yet</p>
-                  </div>
-                )}
-              </div>
 
-              <button
-                onClick={() => handleTakeQuiz(selectedQuiz.quizId)}
-                style={{
-                  width: '100%',
-                  backgroundColor: '#0061fe',
-                  color: '#ffffff',
-                  padding: '14px 24px',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: '0 4px 6px rgba(0, 97, 254, 0.2)'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0052d9'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0061fe'}
-              >
-                Take This Quiz →
-              </button>
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e1919', marginBottom: '8px' }}>
-                No quiz selected
-              </h3>
-              <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-                Create your first quiz to get started
-              </p>
+                      {/* Three-dot menu */}
+                      <div className="position-relative">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.nativeEvent.stopImmediatePropagation();
+                            setOpenMenuId(openMenuId === quiz.quizId ? null : quiz.quizId);
+                          }}
+                          className="menu-dots-btn"
+                        >
+                          ⋮
+                        </button>
+
+                        {openMenuId === quiz.quizId && (
+                          <div className="dropdown-menu-custom">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEdit(quiz.quizId);
+                              }}
+                              className="menu-item"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDuplicate(quiz.quizId);
+                              }}
+                              className="menu-item"
+                            >
+                              Duplicate
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleShare(quiz.quizId);
+                              }}
+                              className="menu-item"
+                            >
+                              Share
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteConfirmId(quiz.quizId);
+                              }}
+                              className="menu-item text-danger"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Right Side - Quiz Preview */}
+          <div className="col-lg-6">
+            <div className="quiz-preview rounded-4 p-5 sticky-top" style={{ top: '100px' }}>
+              {selectedQuiz ? (
+                <>
+                  <div className="mb-4">
+                    <div className="d-flex align-items-center gap-2 mb-3">
+                      <div className="quiz-preview-indicator"></div>
+                      <span className="small text-muted fw-bold">QUIZ PREVIEW</span>
+                    </div>
+                    <h3 className="fs-4 fw-bold text-dark mb-2">
+                      <span className="text-primary">Take:</span> {selectedQuiz.title}
+                    </h3>
+                    <p className="text-muted small mb-4">
+                      {selectedQuiz.description}
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-3 p-4 mb-4 questions-preview">
+                    {selectedQuiz.questions && selectedQuiz.questions.length > 0 ? (
+                      <div>
+                        <h4 className="fw-bold text-dark mb-3">
+                          Questions ({selectedQuiz.questions.length})
+                        </h4>
+                        {selectedQuiz.questions.map((q: any, index: number) => (
+                          <div key={index} className="mb-2 pb-2" style={{ borderBottom: index < selectedQuiz.questions.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
+                            <p className="text-dark small mb-0">
+                              {index + 1}. {q.questionText}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted py-5">
+                        <p className="small">No questions yet</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => handleTakeQuiz(selectedQuiz.quizId)}
+                    className="btn btn-primary w-100 fw-semibold"
+                  >
+                    Take This Quiz →
+                  </button>
+                </>
+              ) : (
+                <div className="text-center py-5">
+                  <h3 className="fw-bold text-dark mb-2">
+                    No quiz selected
+                  </h3>
+                  <p className="text-muted small">
+                    Create your first quiz to get started
+                  </p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmId !== null && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}
-        onClick={() => setDeleteConfirmId(null)}
-        >
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '12px',
-            padding: '32px',
-            maxWidth: '400px',
-            boxShadow: '0 20px 25px rgba(0, 0, 0, 0.3)'
-          }}
-          onClick={(e) => e.stopPropagation()}
-          >
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e1919', marginBottom: '12px' }}>
+        <div className="modal-overlay" onClick={() => setDeleteConfirmId(null)}>
+          <div className="modal-content bg-white rounded-3 p-5" onClick={(e) => e.stopPropagation()}>
+            <h3 className="fw-bold text-dark mb-2">
               Delete Quiz?
             </h3>
-            <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '24px' }}>
+            <p className="text-muted small mb-4">
               Are you sure you want to delete this quiz? This action cannot be undone.
             </p>
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div className="d-flex gap-3">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                style={{
-                  flex: 1,
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  border: '1px solid #e5e7eb',
-                  backgroundColor: '#ffffff',
-                  color: '#1e1919',
-                  cursor: 'pointer'
-                }}
+                className="btn btn-outline-secondary flex-grow-1"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirmId)}
-                style={{
-                  flex: 1,
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  border: 'none',
-                  backgroundColor: '#ef4444',
-                  color: '#ffffff',
-                  cursor: 'pointer'
-                }}
+                className="btn btn-danger flex-grow-1"
               >
                 Delete
               </button>
@@ -501,7 +316,6 @@ function Home() {
           </div>
         </div>
       )}
-      </div>
     </div>
   );
 }

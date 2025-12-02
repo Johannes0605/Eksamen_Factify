@@ -73,8 +73,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error || 'Registration failed');
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.message || 'Registration failed';
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
