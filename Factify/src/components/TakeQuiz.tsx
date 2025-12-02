@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import apiService from '../services/api.service';
 import { Quiz, Question } from '../types/quiz.types';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './TakeQuiz.css';
 
 interface TakeQuizProps {
   quizId?: number;
@@ -126,16 +128,16 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
 
   if (loading) {
     return (
-      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)' }}>
-        <div style={{ fontSize: '1.5rem', color: '#6b7280' }}>Loading quiz...</div>
+      <div className="take-quiz-container d-flex align-items-center justify-content-center">
+        <div className="fs-5 text-muted">Loading quiz...</div>
       </div>
     );
   }
 
   if (!quiz) {
     return (
-      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)' }}>
-        <div style={{ fontSize: '1.5rem', color: '#dc3545' }}>Quiz not found</div>
+      <div className="take-quiz-container d-flex align-items-center justify-content-center">
+        <div className="fs-5 text-danger">Quiz not found</div>
       </div>
     );
   }
@@ -145,39 +147,38 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
     const percentage = (score / totalPoints) * 100;
 
     return (
-      <div className="d-flex align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '24px' }}>
-        <div className="bg-light-custom rounded-xl p-5 border border-light-custom text-center" style={{ maxWidth: '600px', width: '100%' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: 700, color: '#1e1919', marginBottom: '24px' }}>
+      <div className="take-quiz-container d-flex align-items-center justify-content-center p-4">
+        <div className="quiz-results-card bg-white rounded-4 p-5 text-center" style={{ maxWidth: '600px', width: '100%' }}>
+          <h2 className="fs-1 fw-bold text-dark mb-4">
             Quiz Completed
           </h2>
           
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{ fontSize: '3rem', fontWeight: 700, color: '#0061fe', marginBottom: '8px' }}>
+          <div className="mb-4">
+            <div className="results-score fw-bold mb-2">
               {score} / {totalPoints}
             </div>
-            <div style={{ fontSize: '1.5rem', color: '#6b7280' }}>
+            <div className="fs-4 text-muted">
               {percentage.toFixed(0)}%
             </div>
           </div>
 
-          <div style={{ marginBottom: '32px' }}>
+          <div className="mb-5">
             {percentage >= 80 && (
-              <p style={{ fontSize: '1.25rem', color: '#10b981', fontWeight: 600, marginBottom: 0 }}>Excellent performance!</p>
+              <p className="fs-5 text-success fw-semibold mb-0">Excellent performance!</p>
             )}
             {percentage >= 60 && percentage < 80 && (
-              <p style={{ fontSize: '1.25rem', color: '#0061fe', fontWeight: 600, marginBottom: 0 }}>Good job!</p>
+              <p className="fs-5 text-primary fw-semibold mb-0">Good job!</p>
             )}
             {percentage < 60 && (
-              <p style={{ fontSize: '1.25rem', color: '#f59e0b', fontWeight: 600, marginBottom: 0 }}>Keep practicing to improve</p>
+              <p className="fs-5 text-warning fw-semibold mb-0">Keep practicing to improve</p>
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div className="d-flex gap-3 justify-content-center flex-wrap">
             {isAuthenticated ? (
               <button
                 onClick={handleBackHome}
-                className="btn btn-primary"
-                style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
+                className="btn btn-primary px-4 fw-semibold"
               >
                 Back to Home
               </button>
@@ -185,15 +186,13 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
               <>
                 <button
                   onClick={() => navigate('/register')}
-                  className="btn btn-primary"
-                  style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
+                  className="btn btn-primary px-4 fw-semibold"
                 >
                   Create Account
                 </button>
                 <button
                   onClick={() => navigate('/login')}
-                  className="btn btn-outline-primary"
-                  style={{ padding: '12px 32px', fontSize: '15px', fontWeight: 600 }}
+                  className="btn btn-outline-primary px-4 fw-semibold"
                 >
                   Login
                 </button>
@@ -210,168 +209,133 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
   const allAnswered = quiz.questions.every((_, index) => answers[index] !== undefined);
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '40px 24px' }}>
-      <div className="container" style={{ maxWidth: '800px' }}>
-        
-        {/* Header */}
-        <div style={{ marginBottom: '40px' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: 700, color: '#1e1919', marginBottom: '8px' }}>
-            {quiz.title}
-          </h1>
-          <p style={{ color: '#6b7280', marginBottom: 0 }}>
-            {quiz.description}
-          </p>
-        </div>
+    <div className="take-quiz-container d-flex align-items-start justify-content-center py-5" style={{ paddingTop: '80px' }}>
+      <div className="quiz-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '600px' }}>
+        <div className="card-body p-5">
+          {/* Header */}
+          <div className="mb-4">
+            <h1 className="h3 fw-bold text-dark mb-2">
+              {quiz.title}
+            </h1>
+            <p className="text-muted small mb-3">
+              {quiz.description}
+            </p>
 
-        {/* Progress */}
-        <div style={{ marginBottom: '40px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '15px', fontWeight: 600, color: '#1e1919' }}>
-              Question {currentQuestionIndex + 1} of {quiz.questions.length}
-            </span>
-            <span style={{ fontSize: '14px', color: '#6b7280' }}>
-              {currentQuestion.points} points
-            </span>
-          </div>
-          <div className="progress" style={{ height: '8px', borderRadius: '4px', backgroundColor: '#e5e7eb' }}>
-            <div
-              className="progress-bar"
-              style={{
-                width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%`,
-                backgroundColor: '#0061fe',
-                transition: 'width 0.3s ease'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Question Card */}
-        <div style={{
-          backgroundColor: '#f9fafb',
-          borderRadius: '12px',
-          padding: '32px',
-          border: '1px solid #e5e7eb',
-          marginBottom: '32px'
-        }}>
-          <h2 style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#1e1919',
-            marginBottom: '24px',
-            lineHeight: 1.6
-          }}>
-            {currentQuestion.questionText}
-          </h2>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {currentQuestion.answerOptions && currentQuestion.answerOptions.length > 0 ? (
-              currentQuestion.answerOptions.map((option) => {
-                const isSelected = answers[currentQuestionIndex] === option.answerOptionId;
-                
-                return (
-                  <button
-                    key={option.answerOptionId}
-                    onClick={() => handleAnswerSelect(option.answerOptionId)}
-                    style={{
-                      padding: '16px',
-                      borderRadius: '8px',
-                      border: `2px solid ${isSelected ? '#0061fe' : '#d1d5db'}`,
-                      backgroundColor: isSelected ? '#f0f7ff' : '#ffffff',
-                      color: isSelected ? '#0061fe' : '#1e1919',
-                      fontSize: '15px',
-                      fontWeight: isSelected ? 600 : 500,
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.borderColor = '#0061fe';
-                        e.currentTarget.style.backgroundColor = '#f9fafb';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.borderColor = '#d1d5db';
-                        e.currentTarget.style.backgroundColor = '#ffffff';
-                      }
-                    }}
-                  >
-                    {option.answerText}
-                  </button>
-                );
-              })
-            ) : (
-              <div style={{ padding: '16px', color: '#dc3545', fontWeight: 600 }}>
-                No options available for this question
+            {/* Progress Bar */}
+            <div className="mb-0">
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <span className="small fw-semibold text-dark">
+                  {currentQuestionIndex + 1}/{quiz.questions.length}
+                </span>
               </div>
+              <div className="progress" style={{ height: '6px' }}>
+                <div
+                  className="progress-bar"
+                  style={{
+                    width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%`,
+                    transition: 'width 0.3s ease'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Question */}
+          <div className="mb-4">
+            <h2 className="fs-5 fw-semibold text-dark mb-4" style={{ lineHeight: 1.6 }}>
+              {currentQuestion.questionText}
+            </h2>
+
+            <div className="d-flex flex-column gap-3">
+              {currentQuestion.answerOptions && currentQuestion.answerOptions.length > 0 ? (
+                currentQuestion.answerOptions.map((option) => {
+                  const isSelected = answers[currentQuestionIndex] === option.answerOptionId;
+                  const isCorrect = option.isCorrect;
+                  const answered = answers[currentQuestionIndex] !== undefined;
+                  
+                  // Determine button styling based on state
+                  let borderColor = '#d1d5db';
+                  let bgColor = '#ffffff';
+                  let textColor = '#1e1919';
+                  
+                  if (answered) {
+                    if (isCorrect) {
+                      borderColor = '#10b981';
+                      bgColor = '#f0fdf4';
+                      textColor = '#10b981';
+                    } else if (isSelected && !isCorrect) {
+                      borderColor = '#ef4444';
+                      bgColor = '#fef2f2';
+                      textColor = '#ef4444';
+                    }
+                  } else if (isSelected) {
+                    borderColor = '#0061fe';
+                    bgColor = '#f0f7ff';
+                    textColor = '#0061fe';
+                  }
+                  
+                  return (
+                    <button
+                      key={option.answerOptionId}
+                      onClick={() => !answered && handleAnswerSelect(option.answerOptionId)}
+                      className="answer-option p-3 rounded-3 text-start d-flex align-items-center justify-content-between"
+                      style={{
+                        border: `2px solid ${borderColor}`,
+                        backgroundColor: bgColor,
+                        color: textColor,
+                        fontWeight: isSelected || isCorrect ? 600 : 500,
+                        fontSize: '15px',
+                        cursor: answered ? 'default' : 'pointer',
+                        transition: 'all 0.2s',
+                        opacity: answered && !isCorrect && !isSelected ? 0.6 : 1
+                      }}
+                    >
+                      <span>{option.answerText}</span>
+                      {answered && (
+                        <span style={{ marginLeft: '8px', fontSize: '18px' }}>
+                          {isCorrect && '✓'}
+                          {isSelected && !isCorrect && '✗'}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })
+              ) : (
+                <div className="p-3 text-danger fw-semibold small">
+                  No options available for this question
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Navigation Button */}
+          <div className="d-flex gap-3">
+            {currentQuestionIndex < quiz.questions.length - 1 ? (
+              <button
+                onClick={handleNext}
+                disabled={!isAnswered}
+                className="btn btn-primary flex-grow-1 fw-semibold rounded-pill"
+                style={{
+                  opacity: !isAnswered ? 0.5 : 1,
+                  cursor: !isAnswered ? 'not-allowed' : 'pointer'
+                }}
+              >
+                Next →
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                disabled={!allAnswered}
+                className="btn btn-success flex-grow-1 fw-semibold rounded-pill"
+                style={{
+                  opacity: !allAnswered ? 0.5 : 1,
+                  cursor: !allAnswered ? 'not-allowed' : 'pointer'
+                }}
+              >
+                Submit Quiz
+              </button>
             )}
           </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-          <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            className="btn btn-outline-secondary flex-grow-1"
-            style={{
-              opacity: currentQuestionIndex === 0 ? 0.5 : 1,
-              cursor: currentQuestionIndex === 0 ? 'not-allowed' : 'pointer'
-            }}
-          >
-            Previous
-          </button>
-
-          {currentQuestionIndex === quiz.questions.length - 1 ? (
-            <button
-              onClick={handleSubmit}
-              disabled={!allAnswered}
-              className="btn btn-success flex-grow-1"
-              style={{
-                opacity: !allAnswered ? 0.5 : 1,
-                cursor: !allAnswered ? 'not-allowed' : 'pointer'
-              }}
-            >
-              Submit Quiz
-            </button>
-          ) : (
-            <button
-              onClick={handleNext}
-              disabled={!isAnswered}
-              className="btn btn-primary flex-grow-1"
-              style={{
-                opacity: !isAnswered ? 0.5 : 1,
-                cursor: !isAnswered ? 'not-allowed' : 'pointer'
-              }}
-            >
-              Next
-            </button>
-          )}
-        </div>
-
-        {/* Question Dots */}
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {quiz.questions.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentQuestionIndex(index)}
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                border: 'none',
-                backgroundColor: index === currentQuestionIndex ? '#0061fe' : answers[index] !== undefined ? '#10b981' : '#e5e7eb',
-                color: index === currentQuestionIndex || answers[index] !== undefined ? '#ffffff' : '#6b7280',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              {index + 1}
-            </button>
-          ))}
         </div>
       </div>
     </div>

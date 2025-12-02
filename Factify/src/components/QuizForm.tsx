@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import apiService from '../services/api.service';
 import { Quiz, Question, AnswerOption } from '../types/quiz.types';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './QuizForm.css';
 
 interface QuizFormProps {
   quizId?: number;
@@ -161,40 +163,34 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
   };
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', paddingTop: '60px', paddingBottom: '60px' }}>
-      <div className="container">
-        
-        {/* Header Section */}
-        <div className="mb-5">
-          <div className="d-flex align-items-center gap-2 mb-3">
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--bs-primary)' }}></div>
-            <span className="text-secondary-custom fw-semibold small">QUIZ BUILDER</span>
+    <div className="quiz-form-container d-flex align-items-start justify-content-center py-5" style={{ paddingTop: '80px' }}>
+      <div className="quiz-form-card card border-0 shadow-lg rounded-4 w-100" style={{ maxWidth: '800px' }}>
+        <div className="card-body p-5">
+          {/* Header Section */}
+          <div className="mb-4">
+            <h1 className="h2 fw-bold text-dark mb-2">
+              {quizId ? 'Edit Your Quiz' : 'Create New Quiz'}
+            </h1>
+            <p className="text-muted small mb-3">
+              {quizId ? 'Update quiz details and questions' : 'Build an engaging quiz with custom questions and answers'}
+            </p>
           </div>
-          <h1 className="display-5 fw-bold text-dark-custom mb-2">
-            {quizId ? 'Edit Your Quiz' : 'Create New Quiz'}
-          </h1>
-          <p className="lead text-secondary-custom">
-            {quizId ? 'Update quiz details and questions' : 'Build an engaging quiz with custom questions and answers'}
-          </p>
-        </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="alert alert-danger mb-4" role="alert">
-            {error}
-          </div>
-        )}
+          {/* Error Alert */}
+          {error && (
+            <div className="alert alert-danger mb-4" role="alert">
+              {error}
+            </div>
+          )}
 
-        {/* Main Form Card */}
-        <div className="bg-light-custom rounded-xl p-5 border border-light-custom shadow-sm-custom">
           <form onSubmit={handleSubmit}>
             
             {/* Quiz Title */}
-            <div className="mb-4">
-              <label className="form-label">Quiz Title</label>
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Quiz Title</label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control-lg rounded-pill quiz-input"
                 value={quiz.title}
                 onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
                 placeholder="Enter an engaging title for your quiz"
@@ -204,9 +200,9 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
             {/* Quiz Description */}
             <div className="mb-4">
-              <label className="form-label">Description</label>
+              <label className="form-label fw-semibold">Description</label>
               <textarea
-                className="form-control"
+                className="form-control quiz-input"
                 value={quiz.description}
                 onChange={(e) => setQuiz({ ...quiz, description: e.target.value })}
                 rows={3}
@@ -215,56 +211,54 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
             </div>
 
             {/* Questions Section */}
-            <div className="mb-5">
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h3 className="fw-bold text-dark-custom mb-0">
+            <div className="mb-4">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h3 className="fw-bold text-dark mb-0">
                   Questions ({quiz.questions?.length || 0})
                 </h3>
                 <button
                   type="button"
                   onClick={addQuestion}
-                  className="btn btn-success"
+                  className="btn btn-success btn-sm rounded-pill"
                 >
                   + Add Question
                 </button>
               </div>
 
               {quiz.questions?.length === 0 ? (
-                <div className="bg-white rounded p-5 text-center border border-2 border-dashed border-light-custom">
-                  <p className="text-secondary-custom fw-semibold mb-1" style={{ fontSize: '1.125rem' }}>No questions yet</p>
-                  <p className="text-secondary small">Click the button above to create your first question</p>
+                <div className="bg-light rounded-3 p-4 text-center border border-2 border-dashed border-secondary-subtle">
+                  <p className="fw-semibold mb-1">No questions yet</p>
+                  <p className="text-muted small mb-0">Click the button above to create your first question</p>
                 </div>
               ) : (
                 quiz.questions?.map((question, qIndex) => (
                   <div 
                     key={qIndex}
-                    className="bg-white rounded-lg p-4 mb-3 border border-light-custom"
+                    className="bg-light rounded-3 p-4 mb-3 border"
                   >
                     {/* Question Header */}
-                    <div className="d-flex justify-content-between align-items-start mb-4">
-                      <div>
-                        <span
-                          className="badge bg-primary rounded-circle d-inline-flex align-items-center justify-content-center"
-                          style={{ width: '32px', height: '32px', fontSize: '14px', fontWeight: 700 }}
-                        >
-                          {qIndex + 1}
-                        </span>
-                      </div>
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <span
+                        className="badge bg-primary rounded-circle d-inline-flex align-items-center justify-content-center"
+                        style={{ width: '32px', height: '32px', fontSize: '14px', fontWeight: 700 }}
+                      >
+                        {qIndex + 1}
+                      </span>
                       <button
                         type="button"
                         onClick={() => removeQuestion(qIndex)}
-                        className="btn btn-outline-danger btn-sm"
+                        className="btn btn-outline-danger btn-sm rounded-pill"
                       >
-                        Remove Question
+                        Remove
                       </button>
                     </div>
 
                     {/* Question Text Input */}
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <label className="form-label small fw-semibold">Question Text</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control quiz-input"
                         value={question.questionText}
                         onChange={(e) => updateQuestion(qIndex, 'questionText', e.target.value)}
                         placeholder="Enter your question"
@@ -274,29 +268,29 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
 
                     {/* Answer Options */}
                     <div>
-                      <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
                         <label className="form-label small fw-semibold mb-0">
                           Answer Options ({question.answerOptions?.length || 0})
                         </label>
                         <button
                           type="button"
                           onClick={() => addAnswerOption(qIndex)}
-                          className="btn btn-primary btn-sm"
+                          className="btn btn-primary btn-sm rounded-pill"
                         >
                           + Add Option
                         </button>
                       </div>
 
-                      <div className="d-flex flex-column gap-3">
+                      <div className="d-flex flex-column gap-2">
                         {(question.answerOptions && question.answerOptions.length > 0) ? (
                           question.answerOptions.map((option, oIndex) => (
                             <div 
                               key={oIndex}
-                              className="d-flex align-items-center gap-3 bg-light-custom p-3 rounded-lg border border-light-custom"
+                              className="d-flex align-items-center gap-2 bg-white p-2 rounded-2 border border-light"
                             >
                               <input
                                 type="text"
-                                className="form-control"
+                                className="form-control form-control-sm quiz-input"
                                 value={option.answerText}
                                 onChange={(e) => updateAnswerOption(qIndex, oIndex, 'answerText', e.target.value)}
                                 placeholder={`Option ${oIndex + 1}`}
@@ -323,7 +317,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                               <button
                                 type="button"
                                 onClick={() => removeAnswerOption(qIndex, oIndex)}
-                                className="btn btn-outline-danger btn-sm"
+                                className="btn btn-outline-danger btn-sm rounded-pill"
                               >
                                 Remove
                               </button>
@@ -331,7 +325,7 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
                           ))
                         ) : (
                           <div className="text-center p-3 text-muted">
-                            <p className="mb-0">No options yet. Click "Add Option" to create one.</p>
+                            <p className="mb-0 small">No options yet. Click "Add Option" to create one.</p>
                           </div>
                         )}
                       </div>
@@ -342,31 +336,27 @@ const QuizForm: React.FC<QuizFormProps> = ({ quizId: propQuizId, onSave, onCance
             </div>
 
             {/* Form Actions */}
-            <div className="row g-3 pt-4 border-top border-light-custom">
-              <div className="col-6">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn btn-primary w-100"
-                >
-                  {loading ? 'Saving...' : 'Save Quiz'}
-                </button>
-              </div>
-              <div className="col-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onCancel) {
-                      onCancel();
-                    } else {
-                      navigate('/home');
-                    }
-                  }}
-                  className="btn btn-outline-secondary w-100"
-                >
-                  Cancel
-                </button>
-              </div>
+            <div className="d-flex gap-3 pt-4 border-top mt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary flex-grow-1 rounded-pill fw-semibold"
+              >
+                {loading ? 'Saving...' : 'Save Quiz'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onCancel) {
+                    onCancel();
+                  } else {
+                    navigate('/home');
+                  }
+                }}
+                className="btn btn-outline-secondary flex-grow-1 rounded-pill fw-semibold"
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>
