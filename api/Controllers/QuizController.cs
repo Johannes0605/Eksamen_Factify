@@ -29,7 +29,8 @@ namespace QuizApp.Controllers
                 return Unauthorized();
             }
 
-            // Retrieve only quizzes belonging to this user (filtered in SQL)\n            var userQuizzes = await _quizRepository.GetQuizzesByUserIdAsync(userId);
+            // Retrieve only quizzes belonging to this user (filtered in SQL)
+            var userQuizzes = await _quizRepository.GetQuizzesByUserIdAsync(userId);
             return Ok(userQuizzes);
         }
 

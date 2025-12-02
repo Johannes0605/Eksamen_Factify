@@ -119,9 +119,9 @@ const LandingPage: React.FC = () => {
                       {showResult ? 'COMPLETED' : `${currentQuestion + 1}/${sampleQuiz.questions.length}`}
                     </span>
                   </div>
-                  <h3 className="card-title h4 fw-bold mb-2">
+                  <h2 className="card-title h4 fw-bold mb-2">
                     {sampleQuiz.title}
-                  </h3>
+                  </h2>
                   <p className="card-text small text-muted">
                     Try this interactive sample quiz
                   </p>
@@ -182,9 +182,9 @@ const LandingPage: React.FC = () => {
                   </>
                 ) : (
                   <div className="bg-light rounded-3 p-5 text-center">
-                    <h4 className="fw-bold mb-3">
+                    <h3 className="fw-bold mb-3">
                       Quiz Completed!
-                    </h4>
+                    </h3>
                     <p className="display-5 fw-bold text-primary mb-3">
                       {score} / {sampleQuiz.questions.length}
                     </p>
