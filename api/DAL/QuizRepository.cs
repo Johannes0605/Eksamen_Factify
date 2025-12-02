@@ -16,6 +16,7 @@ namespace QuizApp.DAL
         public async Task<List<Quiz>> GetAllQuizzesAsync()
         {
             return await _context.Quizzes
+                .AsNoTracking()  // Read-only query optimization
                 .Include(q => q.Questions)
                     .ThenInclude(qs => qs.Options)
                 .ToListAsync();
@@ -24,6 +25,7 @@ namespace QuizApp.DAL
         public async Task<List<Quiz>> GetQuizzesByUserIdAsync(int userId)
         {
             return await _context.Quizzes
+                .AsNoTracking()  // Read-only query optimization
                 .Include(q => q.Questions)
                     .ThenInclude(qs => qs.Options)
                 .Where(q => q.UserId == userId)
@@ -34,6 +36,7 @@ namespace QuizApp.DAL
         public async Task<Quiz?> GetQuizByIdAsync(int id)
         {
             return await _context.Quizzes
+                .AsNoTracking()  // Read-only query optimization
                 .Include(q => q.Questions)
                     .ThenInclude(qs => qs.Options)
                 .FirstOrDefaultAsync(q => q.QuizId == id);
