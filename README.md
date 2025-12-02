@@ -96,6 +96,24 @@ npm run dev
 
 This uses `concurrently` to run both backend and frontend servers simultaneously.
 
+## Login & Access
+
+The application allows free registration - examiners can create a new account at `/register`.
+
+**Option 1: Use Pre-configured Test Account**
+
+A test account is already registered in the database:
+
+**Username:** `Testbruker`  
+**Email:** `test@bruker.com`  
+**Password:** `Test123!`
+
+**Option 2: Create Your Own Account**
+1. Navigate to `http://localhost:5173`
+2. Click "Register" 
+3. Fill in username, email, and password
+4. Login with your credentials
+
 ## Project Structure
 
 ```
