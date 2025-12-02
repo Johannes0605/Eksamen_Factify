@@ -104,7 +104,6 @@ namespace api.Controllers
             }
         }
 
-<<<<<<< HEAD
         // Validates password strength and returns detailed error messages
         private List<string> GetPasswordErrors(string password)
         {
@@ -167,8 +166,6 @@ namespace api.Controllers
             return errors;
         }
 
-=======
->>>>>>> bdd1113c54bee0eed73dea74a2d558c0456bc48b
         // Handles password reset request
         [HttpPost("forgot-password")]
         public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
