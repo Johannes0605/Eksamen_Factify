@@ -125,7 +125,6 @@ namespace api.Controllers
             }
         }
 
-<<<<<<< HEAD
         // Validates password strength and returns detailed error messages
         private List<string> GetPasswordErrors(string password)
         {
@@ -163,7 +162,31 @@ namespace api.Controllers
                 errors.Add("Email must contain an @ symbol (example: user@example.com)");
 
             return errors;
-=======
+        }
+
+        // Validates username and returns detailed error messages
+        private List<string> GetUsernameErrors(string username)
+        {
+            var errors = new List<string>();
+
+            // Check if username is empty
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                errors.Add("Username is required");
+                return errors;
+            }
+
+            // Check minimum length
+            if (username.Length < 3)
+                errors.Add("Username must be at least 3 characters long");
+
+            // Check maximum length
+            if (username.Length > 20)
+                errors.Add("Username must be no more than 20 characters long");
+
+            return errors;
+        }
+
         // Handles password reset request
         [HttpPost("forgot-password")]
         public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
@@ -200,7 +223,6 @@ namespace api.Controllers
                 _logger.LogError(ex, "Error during password reset request");
                 return StatusCode(500, new { message = "An error occurred while processing your request" });
             }
->>>>>>> e2f0c38f9b18ab002c8686dd4af8eee1a6f1a6f0
         }
     }
 }
