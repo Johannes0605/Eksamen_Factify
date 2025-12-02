@@ -35,7 +35,7 @@ namespace api.Tests
         }
 
         [Fact]
-        public void HashPassword_SamePlainTextPassword_ShouldProduceSameHash()
+        public void HashPassword_SamePlainTextPassword_ShouldProduceDifferentHashes()
         {
             // Arrange
             var password = "password123";
@@ -44,8 +44,12 @@ namespace api.Tests
             var hash1 = _authService.HashPassword(password);
             var hash2 = _authService.HashPassword(password);
 
-            // Assert
-            Assert.Equal(hash1, hash2);
+            // Assert - BCrypt generates unique salts, so hashes will differ
+            Assert.NotEqual(hash1, hash2);
+            
+            // But both should verify correctly
+            Assert.True(_authService.VerifyPassword(password, hash1));
+            Assert.True(_authService.VerifyPassword(password, hash2));
         }
 
         [Fact]

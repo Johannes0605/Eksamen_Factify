@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import apiService from '../services/api.service';
@@ -44,14 +44,19 @@ function Home() {
     }
   };
 
-  const getSortedQuizzes = () => {
+  // Memoize sorted quizzes to prevent re-sorting on every render
+  const sortedQuizzes = useMemo(() => {
     const sorted = [...quizzes];
     if (sortBy === 'created') {
-      return sorted.sort((a, b) => new Date(b.createdDate || 0).getTime() - new Date(a.createdDate || 0).getTime());
+      return sorted.sort((a, b) => 
+        new Date(b.createdDate || 0).getTime() - new Date(a.createdDate || 0).getTime()
+      );
     } else {
-      return sorted.sort((a, b) => new Date(b.lastUsedDate || 0).getTime() - new Date(a.lastUsedDate || 0).getTime());
+      return sorted.sort((a, b) => 
+        new Date(b.lastUsedDate || 0).getTime() - new Date(a.lastUsedDate || 0).getTime()
+      );
     }
-  };
+  }, [quizzes, sortBy]);
 
   const handleEdit = (quizId: number) => {
     navigate(`/quiz-form/${quizId}`);
@@ -77,10 +82,19 @@ function Home() {
   const handleDelete = async (quizId: number) => {
     try {
       await apiService.deleteQuiz(quizId);
-      setQuizzes(quizzes.filter(q => q.quizId !== quizId));
-      if (selectedQuiz?.quizId === quizId) {
-        setSelectedQuiz(quizzes.length > 1 ? quizzes.find(q => q.quizId !== quizId) || null : null);
-      }
+      
+      // Use functional state update to avoid stale state
+      setQuizzes(prevQuizzes => {
+        const newQuizzes = prevQuizzes.filter(q => q.quizId !== quizId);
+        
+        // If deleted quiz was selected, select first remaining quiz or null
+        if (selectedQuiz?.quizId === quizId) {
+          setSelectedQuiz(newQuizzes.length > 0 ? newQuizzes[0] : null);
+        }
+        
+        return newQuizzes;
+      });
+      
       setDeleteConfirmId(null);
       setOpenMenuId(null);
     } catch (err) {
@@ -145,7 +159,7 @@ function Home() {
               </div>
             ) : (
               <div className="d-flex flex-column gap-3">
-                {getSortedQuizzes().map((quiz: any) => (
+                {sortedQuizzes.map((quiz: any) => (
                   <div 
                     key={quiz.quizId} 
                     onClick={() => setSelectedQuiz(quiz)}

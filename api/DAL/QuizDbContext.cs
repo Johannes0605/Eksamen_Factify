@@ -43,6 +43,16 @@ namespace QuizApp.DAL
                 entity.Property(u => u.Username).HasMaxLength(50).IsRequired();
                 entity.Property(u => u.PasswordHash).IsRequired();
             });
+
+            // Configure Quiz entity for better query performance
+            modelBuilder.Entity<Quiz>(entity =>
+            {
+                // Composite index for filtering by user and sorting by created date
+                entity.HasIndex(q => new { q.UserId, q.CreatedDate });
+                
+                // Composite index for filtering by user and sorting by last used date
+                entity.HasIndex(q => new { q.UserId, q.LastUsedDate });
+            });
         }
     }
 }

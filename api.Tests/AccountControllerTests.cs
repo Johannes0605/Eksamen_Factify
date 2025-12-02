@@ -8,6 +8,7 @@ using api.Services;
 using api.DTOs;
 using QuizApp.DAL;
 using QuizApp.Models;
+using FluentValidation;
 using System.Threading.Tasks;
 using System.Linq;
 
@@ -17,6 +18,7 @@ namespace api.Tests
     {
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly Mock<ILogger<AccountController>> _mockLogger;
+        private readonly Mock<IValidator<RegisterRequest>> _mockValidator;
         private QuizDbContext _context;
         private AccountController _controller;
 
@@ -24,6 +26,7 @@ namespace api.Tests
         {
             _mockAuthService = new Mock<IAuthService>();
             _mockLogger = new Mock<ILogger<AccountController>>();
+            _mockValidator = new Mock<IValidator<RegisterRequest>>();
             
             // Setup in-memory database
             var options = new DbContextOptionsBuilder<QuizDbContext>()
@@ -31,7 +34,7 @@ namespace api.Tests
                 .Options;
             _context = new QuizDbContext(options);
             
-            _controller = new AccountController(_context, _mockAuthService.Object, _mockLogger.Object);
+            _controller = new AccountController(_context, _mockAuthService.Object, _mockLogger.Object, _mockValidator.Object);
         }
 
         [Fact]
@@ -43,6 +46,10 @@ namespace api.Tests
                 Email: "newuser@example.com",
                 Password: "password123"
             );
+            
+            // Mock validator to return success
+            _mockValidator.Setup(v => v.ValidateAsync(It.IsAny<RegisterRequest>(), default))
+                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
             
             _mockAuthService.Setup(x => x.HashPassword(It.IsAny<string>()))
                 .Returns("hashed_password");
@@ -78,6 +85,10 @@ namespace api.Tests
                 Email: "existing@example.com",
                 Password: "password123"
             );
+            
+            // Mock validator to return success (email check happens in controller)
+            _mockValidator.Setup(v => v.ValidateAsync(It.IsAny<RegisterRequest>(), default))
+                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             // Act
             var result = await _controller.Register(request);
@@ -106,6 +117,10 @@ namespace api.Tests
                 Email: "newemail@example.com",
                 Password: "password123"
             );
+            
+            // Mock validator to return success (username check happens in controller)
+            _mockValidator.Setup(v => v.ValidateAsync(It.IsAny<RegisterRequest>(), default))
+                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
 
             // Act
             var result = await _controller.Register(request);

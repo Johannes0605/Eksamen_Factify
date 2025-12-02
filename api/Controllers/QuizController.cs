@@ -28,11 +28,8 @@ namespace QuizApp.Controllers
                 return Unauthorized();
             }
 
-            var allQuizzes = await _quizRepository.GetAllQuizzesAsync();
-            var userQuizzes = allQuizzes
-                .Where(q => q.UserId == userId)
-                .OrderByDescending(q => q.CreatedDate)
-                .ToList();
+            // Filter in SQL instead of loading all quizzes into memory
+            var userQuizzes = await _quizRepository.GetQuizzesByUserIdAsync(userId);
             return Ok(userQuizzes);
         }
 

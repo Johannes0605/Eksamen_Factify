@@ -21,6 +21,16 @@ namespace QuizApp.DAL
                 .ToListAsync();
         }
 
+        public async Task<List<Quiz>> GetQuizzesByUserIdAsync(int userId)
+        {
+            return await _context.Quizzes
+                .Include(q => q.Questions)
+                    .ThenInclude(qs => qs.Options)
+                .Where(q => q.UserId == userId)
+                .OrderByDescending(q => q.CreatedDate)
+                .ToListAsync();
+        }
+
         public async Task<Quiz?> GetQuizByIdAsync(int id)
         {
             return await _context.Quizzes

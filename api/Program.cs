@@ -29,13 +29,20 @@ builder.Services.AddSwaggerGen();
 builder.WebHost.UseUrls("https://localhost:5001"); // pick any free port
 
 // Add CORS so React can talk to the API
+// Configure specific origins for security (prevents CSRF attacks)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
-            .AllowAnyOrigin()
+            .WithOrigins(
+                "http://localhost:5173",      // Vite dev server
+                "http://localhost:3000",      // Alternative dev port
+                "https://localhost:5173"
+                // Add production URLs here when deploying
+            )
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            .AllowCredentials());  // Required for cookies/auth headers
 });
 
 // Register your EF DbContext using SQLite

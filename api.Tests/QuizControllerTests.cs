@@ -49,13 +49,12 @@ namespace api.Tests
         public async Task GetAllQuizzes_WithAuthenticatedUser_ShouldReturnUserQuizzes()
         {
             // Arrange
-            var allQuizzes = new List<Quiz>
+            var userQuizzes = new List<Quiz>
             {
-                new Quiz { QuizId = 1, Title = "User1 Quiz1", UserId = _testUserId, CreatedDate = DateTime.UtcNow.AddDays(-2) },
                 new Quiz { QuizId = 2, Title = "User1 Quiz2", UserId = _testUserId, CreatedDate = DateTime.UtcNow.AddDays(-1) },
-                new Quiz { QuizId = 3, Title = "User2 Quiz", UserId = _otherUserId, CreatedDate = DateTime.UtcNow }
+                new Quiz { QuizId = 1, Title = "User1 Quiz1", UserId = _testUserId, CreatedDate = DateTime.UtcNow.AddDays(-2) }
             };
-            _mockRepository.Setup(x => x.GetAllQuizzesAsync()).ReturnsAsync(allQuizzes);
+            _mockRepository.Setup(x => x.GetQuizzesByUserIdAsync(_testUserId)).ReturnsAsync(userQuizzes);
 
             // Act
             var result = await _controller.GetAllQuizzes();
@@ -78,7 +77,7 @@ namespace api.Tests
         public async Task GetAllQuizzes_WithNoQuizzes_ShouldReturnEmptyList()
         {
             // Arrange
-            _mockRepository.Setup(x => x.GetAllQuizzesAsync()).ReturnsAsync(new List<Quiz>());
+            _mockRepository.Setup(x => x.GetQuizzesByUserIdAsync(_testUserId)).ReturnsAsync(new List<Quiz>());
 
             // Act
             var result = await _controller.GetAllQuizzes();

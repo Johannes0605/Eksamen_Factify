@@ -73,9 +73,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.message || 'Registration failed';
-      throw new Error(errorMessage);
+      const errorData = await response.json().catch(() => null);
+      
+      // Handle FluentValidation errors (returns { errors: ["msg1", "msg2"] })
+      if (errorData?.errors && Array.isArray(errorData.errors)) {
+        throw new Error(errorData.errors[0]); // Show first error
+      }
+      
+      // Handle single message error (returns { message: "msg" })
+      if (errorData?.message) {
+        throw new Error(errorData.message);
+      }
+      
+      // Fallback
+      throw new Error('Registration failed');
     }
 
     const data = await response.json();

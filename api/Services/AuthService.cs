@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using QuizApp.Models;
@@ -25,26 +24,20 @@ namespace api.Services
             _config = config;
         }
 
-        // Converts a plain-text password into a hashed string
-        // Uses SHA-256 algorithm (one-way encryption)
+        // Converts a plain-text password into a secure hash
+        // Uses BCrypt with automatic salt generation (industry standard)
         public string HashPassword(string password)
         {
-            using var sha256 = SHA256.Create();
-            // Convert password string to bytes
-            var passwordBytes = Encoding.UTF8.GetBytes(password);
-            // Hash the bytes
-            var hashedBytes = sha256.ComputeHash(passwordBytes);
-            // Convert hashed bytes to Base64 string for storage
-            return Convert.ToBase64String(hashedBytes);
+            // BCrypt automatically generates a salt and uses adaptive hashing
+            // Work factor of 12 provides strong security while maintaining reasonable performance
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
         }
 
-        // Checks if a plain-text password matches a stored hash
+        // Checks if a plain-text password matches a stored BCrypt hash
         public bool VerifyPassword(string password, string storedHash)
         {
-            // Hash the input password
-            var hashOfInput = HashPassword(password);
-            // Compare hashes (not plain passwords!)
-            return hashOfInput == storedHash;
+            // BCrypt.Verify handles salt extraction and comparison automatically
+            return BCrypt.Net.BCrypt.Verify(password, storedHash);
         }
 
         // Creates a JWT token containing user information
