@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using api.Services;
-
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +18,13 @@ builder.Services.AddControllers()
         // Optional: nicer JSON formatting
         // options.JsonSerializerOptions.WriteIndented = true;
     });
+
+// 🔽 Registrer FluentValidation rett etter AddControllers:
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
 
 builder.WebHost.UseUrls("https://localhost:5001"); // pick any free port
 
@@ -91,8 +95,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
