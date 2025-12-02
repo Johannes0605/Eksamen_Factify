@@ -28,13 +28,52 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Password does not match');
+    // Frontend validation to match backend rules
+    // Username validation
+    if (!formData.username || formData.username.trim() === '') {
+      setError('Username is required');
+      return;
+    }
+    if (formData.username.length < 3) {
+      setError('Username must be at least 3 characters long');
+      return;
+    }
+    if (formData.username.length > 20) {
+      setError('Username must be no more than 20 characters long');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    // Email validation
+    if (!formData.email || formData.email.trim() === '') {
+      setError('Email is required');
+      return;
+    }
+    if (!formData.email.includes('@')) {
+      setError('Email must contain an @ symbol (example: user@example.com)');
+      return;
+    }
+
+    // Password validation
+    if (!formData.password) {
+      setError('Password is required');
+      return;
+    }
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+    if (!/[A-Z]/.test(formData.password)) {
+      setError('Password must contain at least one uppercase letter');
+      return;
+    }
+    if (!/[0-9]/.test(formData.password)) {
+      setError('Password must contain at least one number');
+      return;
+    }
+
+    // Confirm password
+    if (formData.password !== formData.confirmPassword) {
+      setError('Password does not match');
       return;
     }
 
