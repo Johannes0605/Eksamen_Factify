@@ -43,11 +43,13 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
         questions: (data.questions || []).map((q: any) => {
           const normalizedQuestion = {
             questionId: q.questionId ?? 0,
+            quizId: q.quizId ?? 0,
             questionText: q.questionText ?? '',
             points: q.points ?? 1,
-            answerOptions: (q.answerOptions || q.options || []).map((opt: any) => ({
-              answerOptionId: opt.answerOptionId ?? opt.optionsId ?? 0,
-              answerText: opt.answerText ?? opt.text ?? '',
+            answerOptions: (q.options || []).map((opt: any) => ({
+              answerOptionId: opt.optionsId ?? 0,
+              questionId: opt.questionId ?? q.questionId ?? 0,
+              answerText: opt.text ?? '',
               isCorrect: opt.isCorrect ?? false
             }))
           };
@@ -262,42 +264,48 @@ const TakeQuiz: React.FC<TakeQuizProps> = ({ quizId: propQuizId, onComplete }) =
           </h2>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {currentQuestion.answerOptions.map((option) => {
-              const isSelected = answers[currentQuestionIndex] === option.answerOptionId;
-              
-              return (
-                <button
-                  key={option.answerOptionId}
-                  onClick={() => handleAnswerSelect(option.answerOptionId)}
-                  style={{
-                    padding: '16px',
-                    borderRadius: '8px',
-                    border: `2px solid ${isSelected ? '#0061fe' : '#d1d5db'}`,
-                    backgroundColor: isSelected ? '#f0f7ff' : '#ffffff',
-                    color: isSelected ? '#0061fe' : '#1e1919',
-                    fontSize: '15px',
-                    fontWeight: isSelected ? 600 : 500,
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#0061fe';
-                      e.currentTarget.style.backgroundColor = '#f9fafb';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#d1d5db';
-                      e.currentTarget.style.backgroundColor = '#ffffff';
-                    }
-                  }}
-                >
-                  {option.answerText}
-                </button>
-              );
-            })}
+            {currentQuestion.answerOptions && currentQuestion.answerOptions.length > 0 ? (
+              currentQuestion.answerOptions.map((option) => {
+                const isSelected = answers[currentQuestionIndex] === option.answerOptionId;
+                
+                return (
+                  <button
+                    key={option.answerOptionId}
+                    onClick={() => handleAnswerSelect(option.answerOptionId)}
+                    style={{
+                      padding: '16px',
+                      borderRadius: '8px',
+                      border: `2px solid ${isSelected ? '#0061fe' : '#d1d5db'}`,
+                      backgroundColor: isSelected ? '#f0f7ff' : '#ffffff',
+                      color: isSelected ? '#0061fe' : '#1e1919',
+                      fontSize: '15px',
+                      fontWeight: isSelected ? 600 : 500,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = '#0061fe';
+                        e.currentTarget.style.backgroundColor = '#f9fafb';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = '#d1d5db';
+                        e.currentTarget.style.backgroundColor = '#ffffff';
+                      }
+                    }}
+                  >
+                    {option.answerText}
+                  </button>
+                );
+              })
+            ) : (
+              <div style={{ padding: '16px', color: '#dc3545', fontWeight: 600 }}>
+                No options available for this question
+              </div>
+            )}
           </div>
         </div>
 
