@@ -77,27 +77,100 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .quiz-form-container {
-    padding: 20px 16px;
+    padding: 24px 16px !important;
+  }
+
+  .quiz-form-card {
+    max-width: 100% !important;
   }
 
   .quiz-form-card .card-body {
-    padding: 1.5rem !important;
+    padding: 1.75rem !important;
+  }
+
+  .quiz-input {
+    padding: 0.75rem 1rem !important;
+    font-size: 16px !important; /* Prevent zoom on iOS */
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+
+  .d-flex.gap-3 {
+    flex-direction: column;
+    gap: 12px !important;
+  }
+
+  .btn.flex-grow-1 {
+    width: 100%;
+  }
+
+  /* Question cards */
+  .bg-light.rounded-3 {
+    padding: 16px !important;
+  }
+
+  /* Answer option controls */
+  .d-flex.align-items-center.gap-2 {
+    flex-wrap: wrap;
+  }
+
+  .form-control-sm {
+    font-size: 16px !important; /* Prevent zoom */
+  }
+}
+
+@media (max-width: 576px) {
+  .quiz-form-container {
+    padding: 20px 12px !important;
+  }
+
+  .quiz-form-card .card-body {
+    padding: 1.25rem !important;
   }
 
   .quiz-input {
     padding: 0.625rem 0.875rem !important;
-    font-size: 0.875rem;
+    font-size: 16px !important;
   }
 
   .btn {
     padding: 10px 16px;
     font-size: 14px;
   }
+
+  h1,
+  .h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3,
+  .fw-bold.text-dark {
+    font-size: 1.125rem !important;
+  }
+
+  .bg-light.rounded-3 {
+    padding: 12px !important;
+  }
+
+  .badge {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 13px !important;
+  }
+
+  .btn-sm {
+    min-height: 40px;
+    font-size: 13px;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .quiz-form-container {
-    padding: 16px 12px;
+    padding: 16px 8px !important;
   }
 
   .quiz-form-card .card-body {
@@ -106,19 +179,19 @@
 
   .quiz-input {
     padding: 0.5rem 0.75rem !important;
-    font-size: 14px;
   }
 
   .btn {
-    padding: 8px 12px;
+    padding: 10px 14px;
     font-size: 13px;
   }
 
-  h1 {
-    font-size: 1.25rem;
+  h1,
+  .h2 {
+    font-size: 1.25rem !important;
   }
 
   h3 {
-    font-size: 1rem;
+    font-size: 1rem !important;
   }
 }

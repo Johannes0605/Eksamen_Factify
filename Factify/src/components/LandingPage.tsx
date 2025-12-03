@@ -74,12 +74,12 @@ const LandingPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '80px 24px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
+    <div className="landing-page-wrapper" style={{ minHeight: 'calc(100vh - 64px)', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)', padding: '80px 24px' }}>
+      <div className="landing-grid" style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
         
         {/* Left Side - Text Content */}
-        <div>
-          <h1 style={{ 
+        <div className="landing-content">
+          <h1 className="landing-title" style={{ 
             fontSize: '3.5rem', 
             fontWeight: 800, 
             lineHeight: 1.2,

@@ -36,6 +36,7 @@ builder.Services.AddCors(options =>
         policy => policy
             .WithOrigins(
                 "http://localhost:5173",      // Vite dev server
+                "http://localhost:4173",      // Vite preview server
                 "http://localhost:3000",      // Alternative dev port
                 "https://localhost:5173"
                 // Add production URLs here when deploying

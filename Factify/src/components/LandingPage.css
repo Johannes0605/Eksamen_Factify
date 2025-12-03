@@ -56,24 +56,98 @@
   border-color: #0061fe !important;
 }
 
+/* Responsive Grid Layout */
 @media (max-width: 991px) {
-  .landing-page-container {
-    padding-top: 40px;
-    padding-bottom: 40px;
+  .landing-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .landing-page-wrapper {
+    padding: 60px 24px !important;
   }
 
   .landing-title {
-    font-size: 2.5rem !important;
+    font-size: 2.75rem !important;
+    text-align: center;
+  }
+
+  .landing-content {
+    text-align: center;
+  }
+
+  .landing-content p {
+    max-width: 100% !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landing-content .btn {
+    width: 100%;
+    max-width: 400px;
+    min-height: 48px; /* Touch-friendly */
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-page-wrapper {
+    padding: 40px 20px !important;
+  }
+
+  .landing-title {
+    font-size: 2.25rem !important;
+  }
+
+  .quiz-card {
+    max-width: 100%;
+  }
+
+  .quiz-card .card-body {
+    padding: 1.5rem !important;
+  }
+
+  .quiz-card .btn-outline-secondary,
+  .quiz-card .btn-outline-primary,
+  .quiz-card .btn {
+    min-height: 44px; /* iOS touch target minimum */
+    font-size: 15px;
   }
 }
 
 @media (max-width: 576px) {
-  .landing-page-container {
-    padding-top: 20px;
-    padding-bottom: 20px;
+  .landing-page-wrapper {
+    padding: 24px 16px !important;
   }
 
   .landing-title {
-    font-size: 1.75rem !important;
+    font-size: 1.875rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .landing-content p {
+    font-size: 1rem !important;
+  }
+
+  .quiz-card .card-body {
+    padding: 1.25rem !important;
+  }
+
+  .quiz-card .card-title {
+    font-size: 1.125rem !important;
+  }
+
+  .quiz-card .btn {
+    width: 100%;
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .landing-title {
+    font-size: 1.625rem !important;
+  }
+
+  .quiz-card .card-body {
+    padding: 1rem !important;
   }
 }

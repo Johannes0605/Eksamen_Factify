@@ -15,10 +15,16 @@ class ApiService {
 
   // Auth endpoints
   async login(credentials: LoginRequest): Promise<AuthResponse> {
+    // Backend expects Capital case properties (C# record convention)
+    const body = {
+      Email: credentials.email,
+      Password: credentials.password
+    };
+    
     const response = await fetch(`${API_BASE_URL}/account/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials)
+      body: JSON.stringify(body)
     });
     
     if (!response.ok) throw new Error('Login failed');
@@ -28,10 +34,12 @@ class ApiService {
   }
 
   async register(data: any): Promise<AuthResponse> {
-    // Extract only fields expected by backend API
-    // confirmPassword is frontend-only (not sent to server)
-    const { username, email, password } = data;
-    const body = { username, email, password };
+    // Backend expects Capital case properties (C# record convention)
+    const body = {
+      Username: data.username,
+      Email: data.email,
+      Password: data.password
+    };
     
     const response = await fetch(`${API_BASE_URL}/account/register`, {
       method: 'POST',
