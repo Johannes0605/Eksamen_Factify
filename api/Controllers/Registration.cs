@@ -80,7 +80,9 @@ namespace api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during registration");
-                return StatusCode(500, new { message = "An error occurred during registration" });
+                Console.WriteLine($"Registration error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
             }
         }
 
@@ -112,7 +114,9 @@ namespace api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during login");
-                return StatusCode(500, new { message = "An error occurred during login" });
+                Console.WriteLine($"Login error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return StatusCode(500, new { message = "An error occurred during login", error = ex.Message });
             }
         }
 

@@ -1,4 +1,5 @@
 using QuizApp.Models;
+using api.Services;
 
 namespace QuizApp.DAL
 {
@@ -8,9 +9,24 @@ namespace QuizApp.DAL
         {
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<QuizDbContext>();
+            var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
 
             // Sørg for at databasen og tabellene finnes
             db.Database.EnsureCreated();
+
+            // Create test user if it doesn't exist
+            if (!db.Users.Any(u => u.Email == "test@bruker.com"))
+            {
+                var testUser = new User
+                {
+                    Username = "Testbruker",
+                    Email = "test@bruker.com",
+                    PasswordHash = authService.HashPassword("Test123!"),
+                    CreatedAt = DateTime.UtcNow
+                };
+                db.Users.Add(testUser);
+                db.SaveChanges();
+            }
 
             if (!db.Quizzes.Any())
             {
