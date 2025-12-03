@@ -6,6 +6,18 @@
 
 A modern, full-stack quiz application built for educational purposes. Factify enables users to create, share, and take interactive quizzes with real-time scoring and comprehensive user management.
 
+## Note – About the JWT Key : 
+
+In this project, we have hardcoded the JWT key directly in appsettings.json.
+We are fully aware that this is not considered good practice, as sensitive information such as secret keys should never be committed to a public or shared repository.
+
+The proper and secure way to handle this would be to use User Secrets or environment variables, for example:
+
+dotnet user-secrets init
+dotnet user-secrets set "Jwt:Key" "<your-own-secret-key>"
+
+However, to simplify testing and make it easier for the examiner to run the web application without additional setup steps, we intentionally chose to include the key directly in appsettings.json for this exam submission.
+
 ## Features
 
 - **User Authentication** - Secure registration and login with JWT tokens and BCrypt password hashing
