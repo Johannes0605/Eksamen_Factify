@@ -115,9 +115,9 @@ function Home() {
         {/* Header */}
         <div className="mb-5">
           <h1 className="display-4 fw-bold text-white mb-3">
-            Welcome back, <span className="text-primary">{user?.username}</span>!
+            Welcome back, <span style={{ color: '#28cdffff' }}>{user?.username}</span>!
           </h1>
-          <p className="fs-5 text-white-50 mb-0">
+          <p className="fs-5 text-white mb-0">
             Here are all the available quizzes
           </p>
         </div>
@@ -144,12 +144,9 @@ function Home() {
 
             {quizzes.length === 0 ? (
               <div className="bg-light rounded-3 p-5 text-center border border-2 border-dashed">
-                <h3 className="fw-bold text-dark mb-2">
+                <h3 className="fw-bold text-dark mb-4">
                   No quizzes yet
                 </h3>
-                <p className="text-muted small mb-4">
-                  Get started by creating your first quiz
-                </p>
                 <button
                   onClick={() => navigate('/quiz-form')}
                   className="btn btn-primary"
@@ -248,12 +245,8 @@ function Home() {
               {selectedQuiz ? (
                 <>
                   <div className="mb-4">
-                    <div className="d-flex align-items-center gap-2 mb-3">
-                      <div className="quiz-preview-indicator"></div>
-                      <span className="small text-muted fw-bold">QUIZ PREVIEW</span>
-                    </div>
                     <h3 className="fs-4 fw-bold text-dark mb-2">
-                      <span className="text-primary">Take:</span> {selectedQuiz.title}
+                      Quiz preview
                     </h3>
                     <p className="text-muted small mb-4">
                       {selectedQuiz.description}
@@ -291,7 +284,7 @@ function Home() {
               ) : (
                 <div className="text-center py-5">
                   <h3 className="fw-bold text-dark mb-2">
-                    No quiz selected
+                    Quiz preview
                   </h3>
                   <p className="text-muted small">
                     Create your first quiz to get started
