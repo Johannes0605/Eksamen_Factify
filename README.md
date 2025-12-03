@@ -14,7 +14,7 @@ We are fully aware that this is not considered good practice, as sensitive infor
 The proper and secure way to handle this would be to use User Secrets or environment variables, for example:
 
 dotnet user-secrets init
-dotnet user-secrets set "Jwt:Key" "<your-own-secret-key>"
+dotnet user-secrets set "Jwt:Key" "your-own-secret-key"
 
 However, to simplify testing and make it easier for the examiner to run the web application without additional setup steps, we intentionally chose to include the key directly in appsettings.json for this exam submission.
 
